@@ -1,72 +1,142 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Founder Adventure: YC Edition</title>
+    <title>FOUNDER QUEST: BOOTSTRAP TO EXIT</title>
     <style>
-        body { background: #0a0a0a; color: #e5e5e5; font-family: 'Inter', sans-serif; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; }
-        #game-container { text-align: center; max-width: 600px; padding: 40px; border: 1px solid #222; border-radius: 24px; background: #111; shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        h1 { color: #ff4500; letter-spacing: -1px; }
-        p { line-height: 1.6; font-size: 1.1rem; color: #a1a1aa; }
-        .btn-group { display: flex; flex-direction: column; gap: 10px; margin-top: 30px; }
-        button { background: #27272a; color: white; border: 1px solid #3f3f46; padding: 15px; border-radius: 12px; cursor: pointer; font-size: 1rem; transition: all 0.2s; }
-        button:hover { background: #ff4500; border-color: #ff4500; transform: translateY(-2px); }
-        .stats { margin-top: 20px; font-size: 0.8rem; color: #52525b; text-transform: uppercase; letter-spacing: 1px; }
+        :root { --orange: #ff4500; --zinc: #18181b; }
+        body { background: #09090b; color: #fafafa; font-family: 'Inter', system-ui, sans-serif; display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; }
+        #game-box { width: 90%; max-width: 700px; padding: 40px; background: var(--zinc); border: 1px solid #27272a; border-radius: 24px; position: relative; }
+        .stat-bar { display: flex; justify-content: space-between; margin-bottom: 30px; font-family: monospace; color: var(--orange); border-bottom: 1px solid #27272a; padding-bottom: 15px; }
+        h1 { font-size: 1.5rem; margin: 0 0 20px 0; letter-spacing: -0.05em; }
+        #text { font-size: 1.25rem; line-height: 1.6; color: #a1a1aa; margin-bottom: 30px; }
+        .btn-list { display: grid; gap: 12px; }
+        button { background: #27272a; border: 1px solid #3f3f46; color: white; padding: 18px; border-radius: 12px; cursor: pointer; text-align: left; font-size: 1rem; transition: all 0.2s; }
+        button:hover { background: #3f3f46; border-color: var(--orange); transform: translateX(5px); }
+        .level-badge { background: var(--orange); color: white; padding: 2px 8px; border-radius: 4px; font-size: 0.7rem; vertical-align: middle; }
     </style>
 </head>
 <body>
-    <div id="game-container">
-        <h1 id="title">Startup Hustle</h1>
-        <p id="text">You have a laptop and a dream. How do you start?</p>
-        <div id="buttons" class="btn-group">
-            </div>
-        <div class="stats" id="stats">Day 1 | Bootstrapped</div>
+    <div id="game-box">
+        <div class="stat-bar">
+            <span>FUNDING: $<span id="funding">0</span></span>
+            <span>STRESS: <span id="stress">0</span>%</span>
+            <span>LEVEL: <span id="lvl">1</span></span>
+        </div>
+        <h1 id="node-title">Day 0</h1>
+        <p id="text"></p>
+        <div id="buttons" class="btn-list"></div>
     </div>
 
     <script>
+        let state = { funding: 0, stress: 0, level: 1, history: [] };
+
         const story = {
             start: {
-                text: "You have a killer idea for an AI tool. Do you spend 3 months building the 'perfect' version, or launch a buggy version today?",
+                title: "The Idea Phase",
+                text: "You're working a 9-5 but have a 'crazy' AI idea. Do you quit immediately or moon-light until you have 10 users?",
                 options: [
-                    { text: "Launch the buggy version", next: "launch" },
-                    { text: "Build the perfect version", next: "perfection" }
+                    { text: "Quit now (High Risk)", next: "quit_now", effect: { stress: 20 } },
+                    { text: "Moonlight (Slow Growth)", next: "moonlight", effect: { funding: 5000 } }
                 ]
             },
-            launch: {
-                text: "You launched! It's buggy, but 5 users signed up. One is a YC partner. Do you DM them or wait for them to notice you?",
+            quit_now: {
+                title: "The Hunger Phase",
+                text: "Rent is due in 2 weeks. You have no product. You can take a high-interest loan or sell your car.",
                 options: [
-                    { text: "Send the DM", next: "dm_win" },
-                    { text: "Stay humble, keep building", next: "silence" }
+                    { text: "Sell the car", next: "focus", effect: { funding: 10000, stress: 10 } },
+                    { text: "Take the loan", next: "debt_spiral", effect: { stress: 40 } }
                 ]
             },
-            perfection: {
-                text: "While you were coding, someone else launched. You're late to the market. Game Over.",
-                options: [{ text: "Try again", next: "start" }]
+            moonlight: {
+                title: "The Grind",
+                text: "You have 10 users! But your boss is suspicious. Do you tell them or hide it?",
+                options: [
+                    { text: "Tell the boss", next: "fired", effect: { stress: 10 } },
+                    { text: "Hide it", next: "stealth", effect: { funding: 2000 } }
+                ]
             },
-            dm_win: {
-                text: "The partner replied! 'Come to a coffee chat.' You just unlocked the YC Path. YOU WIN!",
-                options: [{ text: "Play again", next: "start" }]
+            focus: {
+                title: "The Build",
+                text: "You have $10k and a car-less life. You reach 'Level 2: Builder'. Time for a V1 launch!",
+                options: [
+                    { text: "Launch on Product Hunt", next: "ph_launch", effect: { lvl: 1 } },
+                    { text: "Beta test with 5 friends", next: "beta", effect: { stress: -5 } }
+                ]
             },
-            silence: {
-                text: "They forgot about you. Growth stalled. You ran out of coffee money. Game Over.",
-                options: [{ text: "Try again", next: "start" }]
-            }
+            ph_launch: {
+                title: "Market Validation",
+                text: "You're #1 Product of the Day! 2,000 users sign up. Your server crashes. Scale or pivot?",
+                options: [
+                    { text: "Buy better servers", next: "seed_round", effect: { funding: -5000, lvl: 1 } },
+                    { text: "Limit signups (Exclusivity)", next: "hype", effect: { stress: 20 } }
+                ]
+            },
+            seed_round: {
+                title: "Level 3: Funded",
+                text: "A VC offers $1M at a $5M valuation. But they want your board seat.",
+                options: [
+                    { text: "Take the money", next: "series_a", effect: { funding: 1000000, lvl: 1 } },
+                    { text: "Reject (Bootstrapping)", next: "slow_burn", effect: { stress: 30 } }
+                ]
+            },
+            // GAME OVER NODES
+            debt_spiral: { title: "Bankrupt", text: "The interest ate your dream. Game Over.", options: [{ text: "Restart", next: "start", reset: true }] },
+            fired: { title: "Lawsuit", text: "Your boss sued you for IP theft. Game Over.", options: [{ text: "Restart", next: "start", reset: true }] },
+            
+            // WIN/EXIT PATH (Add 40+ more like this!)
+            series_a: {
+                title: "The Scaling Wall",
+                text: "You're at Level 4. A competitor offers to buy you for $10M. Your investors say NO. Do you listen?",
+                options: [
+                    { text: "Listen to investors (Keep going)", next: "scaling_hell", effect: { stress: 40, funding: 2000000 } },
+                    { text: "Fight investors and sell", next: "exit_small", effect: { funding: 10000000 } }
+                ]
+            },
+            exit_small: { title: "The 'Nice' Exit", text: "You exited for $10M. You're rich, but could you have been a unicorn?", options: [{ text: "Play Again", next: "start", reset: true }] }
         };
 
-        function updateGame(node) {
-            const current = story[node];
-            document.getElementById('text').innerText = current.text;
-            const btnContainer = document.getElementById('buttons');
-            btnContainer.innerHTML = '';
+        function updateGame(nodeKey) {
+            const node = story[nodeKey];
+            
+            // Handle Resets
+            if (node.options[0].reset) {
+                state = { funding: 0, stress: 0, level: 1, history: [] };
+            }
 
-            current.options.forEach(opt => {
+            // Update Screen
+            document.getElementById('node-title').innerText = node.title;
+            document.getElementById('text').innerText = node.text;
+            
+            const btnBox = document.getElementById('buttons');
+            btnBox.innerHTML = '';
+
+            node.options.forEach(opt => {
                 const btn = document.createElement('button');
                 btn.innerText = opt.text;
-                btn.onclick = () => updateGame(opt.next);
-                btnContainer.appendChild(btn);
+                btn.onclick = () => {
+                    if (opt.effect) {
+                        state.funding += (opt.effect.funding || 0);
+                        state.stress += (opt.effect.stress || 0);
+                        state.level += (opt.effect.lvl || 0);
+                    }
+                    
+                    // Check for Game Over (Stress)
+                    if (state.stress >= 100) {
+                        alert("Burnout! You collapsed. Take a break.");
+                        updateGame('start'); 
+                    } else {
+                        updateGame(opt.next);
+                    }
+                };
+                btnBox.appendChild(btn);
             });
+
+            // Update UI Stats
+            document.getElementById('funding').innerText = state.funding.toLocaleString();
+            document.getElementById('stress').innerText = state.stress;
+            document.getElementById('lvl').innerText = state.level;
         }
 
-        // Start the game
         updateGame('start');
     </script>
 </body>
