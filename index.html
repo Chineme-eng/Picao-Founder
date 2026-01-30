@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Founder Adventure</title>
+    <style>
+        body { background: #000; color: #fff; font-family: sans-serif; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; }
+        #game-container { text-align: center; max-width: 500px; padding: 20px; border: 2px solid #333; border-radius: 15px; }
+        button { background: #ff4500; color: white; border: none; padding: 10px 20px; margin: 10px; border-radius: 5px; cursor: pointer; font-weight: bold; }
+        button:hover { background: #ff6a00; }
+    </style>
+</head>
+<body>
+    <div id="game-container">
+        <h1 id="title">The Startup Hustle</h1>
+        <p id="text">A VC offers you $10k but wants 50% of your company. What do you do?</p>
+        <div id="buttons">
+            <button onclick="choice('reject')">Reject: I know my worth</button>
+            <button onclick="choice('accept')">Accept: I need the cash</button>
+        </div>
+    </div>
+
+    <script>
+        function choice(path) {
+            const title = document.getElementById('title');
+            const text = document.getElementById('text');
+            const btnContainer = document.getElementById('buttons');
+
+            if (path === 'reject') {
+                text.innerText = "Smart move. You kept your equity, but now you have $0. Do you build a product or find a co-founder?";
+                btnContainer.innerHTML = `
+                    <button onclick="choice('build')">Build Solo</button>
+                    <button onclick="choice('cofounder')">Find a Partner</button>
+                `;
+            } else if (path === 'accept') {
+                title.innerText = "Game Over";
+                text.innerText = "The VC fired you 3 months later. You gave away too much control.";
+                btnContainer.innerHTML = `<button onclick="location.reload()">Try Again</button>`;
+            }
+            // You can keep adding "if/else" logic here to make the game longer!
+        }
+    </script>
+</body>
+</html>
