@@ -3,531 +3,588 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Picao AI: The Unified Workspace Simulator</title>
+    <title>Picao AI: Founder Simulator v3.0</title>
     <style>
-        /* Official Picao AI Palette & Variables */
-        :root { 
-            --accent: #a855f7; /* Picao AI Purple */
-            --accent-glow: rgba(168, 85, 247, 0.4); 
-            --accent-dim: rgba(168, 85, 247, 0.1);
-            --bg-dark: #050505; 
-            --card-dark: rgba(24, 24, 27, 0.65); /* Glassmorphism Base */
-            --border-light: rgba(255, 255, 255, 0.08); 
-            --text-main: #fafafa; 
+        /* --- THEME VARIABLES --- */
+        :root {
+            /* DARK MODE (DEFAULT) */
+            --bg-color: #050505;
+            --card-bg: rgba(24, 24, 27, 0.65);
+            --text-main: #fafafa;
             --text-muted: #a1a1aa;
-            --locked-bg: rgba(18, 18, 20, 0.8);
-            --danger: #ef4444;
-            --success: #10b981;
+            --border: rgba(255, 255, 255, 0.08);
+            --accent: #a855f7;
+            --accent-glow: rgba(168, 85, 247, 0.4);
+            --btn-bg: rgba(255, 255, 255, 0.03);
+            --btn-hover: rgba(168, 85, 247, 0.1);
+            --scanline: rgba(0, 0, 0, 0.5);
+            --grid: rgba(255, 255, 255, 0.03);
         }
-        
-        body { 
-            background-color: var(--bg-dark); 
-            /* Subtle Workspace Grid Background */
+
+        /* LIGHT MODE OVERRIDES */
+        [data-theme="light"] {
+            --bg-color: #f8fafc;
+            --card-bg: rgba(255, 255, 255, 0.85);
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --border: rgba(0, 0, 0, 0.08);
+            --accent: #9333ea; /* Slightly darker purple for contrast */
+            --accent-glow: rgba(147, 51, 234, 0.25);
+            --btn-bg: #ffffff;
+            --btn-hover: #f3e8ff;
+            --scanline: rgba(255, 255, 255, 0); /* No scanlines in light mode */
+            --grid: rgba(0, 0, 0, 0.03);
+        }
+
+        body {
+            background-color: var(--bg-color);
             background-image: 
-                linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-                radial-gradient(circle at 50% 0%, rgba(168, 85, 247, 0.15) 0%, transparent 60%);
-            background-size: 30px 30px, 30px 30px, 100% 100%;
-            background-position: center top;
-            color: var(--text-main); 
-            font-family: 'Inter', system-ui, -apple-system, sans-serif; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            min-height: 100vh; 
-            margin: 0; 
-            padding: 20px; 
-            box-sizing: border-box; 
-            overflow-x: hidden;
-        }
-
-        /* --- START SCREEN --- */
-        #start-screen {
-            text-align: center;
-            max-width: 700px;
-            z-index: 10;
-            transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1), transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .alpha-badge {
-            display: inline-block;
-            padding: 6px 14px;
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            background: var(--accent-dim);
-            color: var(--accent);
-            border: 1px solid rgba(168, 85, 247, 0.3);
-            border-radius: 50px;
-            margin-bottom: 20px;
-            box-shadow: 0 0 15px var(--accent-glow);
-        }
-        #start-screen h1 {
-            font-size: 4rem;
-            margin: 0 0 15px 0;
-            letter-spacing: -0.04em;
-            background: linear-gradient(to bottom right, #ffffff, #a1a1aa);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            font-weight: 700;
-        }
-        #start-screen p {
-            font-size: 1.25rem;
-            color: var(--text-muted);
-            line-height: 1.6;
-            margin-bottom: 45px;
-            font-weight: 300;
-        }
-        .play-btn {
-            background: var(--text-main);
-            color: var(--bg-dark);
-            border: none;
-            padding: 18px 45px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 0 20px rgba(255,255,255,0.1);
-        }
-        .play-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 0 30px var(--accent-glow);
-            background: var(--accent);
-            color: white;
-        }
-
-        /* --- GLASSMORPHISM GAME UI --- */
-        #game-box { 
-            width: 100%; 
-            max-width: 900px; 
-            padding: 45px; 
-            background: var(--card-dark); 
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid var(--border-light); 
-            border-radius: 20px; 
-            box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.9), inset 0 1px 0 rgba(255,255,255,0.1); 
-            position: relative; 
-            display: none;
-            opacity: 0;
-            transform: translateY(30px) scale(0.98);
-            transition: opacity 0.6s ease, transform 0.6s ease;
-        }
-
-        /* Top HUD */
-        .stat-bar { 
-            display: flex; 
-            flex-wrap: wrap; 
-            justify-content: space-between; 
-            gap: 15px; 
-            margin-bottom: 20px; 
-            font-family: 'Courier New', Courier, monospace; 
-            color: var(--accent); 
-            text-transform: uppercase;
-            border-bottom: 1px solid var(--border-light);
-            padding-bottom: 20px;
-        }
-        .stat-item { display: flex; flex-direction: column; align-items: flex-start; }
-        .stat-label { font-size: 0.7rem; color: var(--text-muted); letter-spacing: 1.5px; margin-bottom: 4px; }
-        .stat-value { font-weight: bold; font-size: 1.3rem; color: var(--text-main); text-shadow: 0 0 10px rgba(255,255,255,0.1); }
-        .stat-value.purple { color: var(--accent); text-shadow: 0 0 15px var(--accent-glow); }
-
-        /* Stress Bar */
-        #stress-container { width: 100%; height: 4px; background: rgba(0,0,0,0.5); border-radius: 2px; margin-bottom: 30px; overflow: hidden; }
-        #stress-fill { height: 100%; background: var(--accent); width: 0%; transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.3s; box-shadow: 0 0 10px var(--accent); }
-
-        /* Traits Inventory */
-        #perks-container {
-            background: rgba(0,0,0,0.3);
-            border: 1px solid var(--border-light);
-            border-radius: 12px;
-            padding: 16px;
-            margin-bottom: 35px;
+                linear-gradient(var(--grid) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+            background-size: 40px 40px;
+            color: var(--text-main);
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
             display: flex;
             align-items: center;
-            gap: 12px;
-            flex-wrap: wrap;
-        }
-        .perks-title { font-weight: 600; letter-spacing: 1.5px; font-size: 0.7rem; text-transform: uppercase; color: #71717a; }
-        .perk-badge {
-            padding: 6px 12px;
-            border-radius: 6px;
-            font-family: 'Courier New', monospace;
-            border: 1px solid rgba(255,255,255,0.1);
-            font-size: 0.75rem;
-            animation: fadeIn 0.4s ease;
-            letter-spacing: 0.5px;
-        }
-        .perk-positive { background: rgba(16, 185, 129, 0.05); color: var(--success); border-color: rgba(16, 185, 129, 0.3); }
-        .perk-negative { background: rgba(239, 68, 68, 0.05); color: var(--danger); border-color: rgba(239, 68, 68, 0.3); }
-        .perk-neutral { background: var(--accent-dim); color: var(--accent); border-color: rgba(168, 85, 247, 0.3); }
-
-        /* Story Content */
-        h2 { font-size: 2.2rem; margin: 0 0 15px 0; letter-spacing: -0.04em; font-weight: 600; color: white; }
-        #text { 
-            font-size: 1.15rem; 
-            line-height: 1.7; 
-            color: var(--text-muted); 
-            margin-bottom: 45px; 
-            min-height: 110px; 
-            font-weight: 300;
-        }
-        
-        /* Interactive Buttons */
-        .btn-list { display: grid; gap: 14px; }
-        button.choice-btn { 
-            background: rgba(255, 255, 255, 0.02); 
-            border: 1px solid var(--border-light); 
-            color: var(--text-main); 
-            padding: 22px 28px; 
-            border-radius: 12px; 
-            cursor: pointer; 
-            text-align: left; 
-            font-size: 1.05rem; 
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            backdrop-filter: blur(10px);
-        }
-        
-        button.choice-btn:hover:not(:disabled) { 
-            background: rgba(168, 85, 247, 0.05); 
-            border-color: var(--accent); 
-            transform: translateX(8px); 
-            box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            overflow: hidden;
+            transition: background-color 0.5s ease;
         }
 
-        button.choice-btn:disabled {
-            background: var(--locked-bg); color: #52525b; cursor: not-allowed; border-style: dashed;
+        /* --- VISUAL EFFECTS --- */
+        /* CRT Scanline Overlay */
+        .scanlines {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(to bottom, var(--scanline) 50%, transparent 50%);
+            background-size: 100% 4px;
+            pointer-events: none;
+            z-index: 99;
+            opacity: 0.15;
         }
 
-        .effect-preview { font-size: 0.8rem; color: #52525b; font-family: 'Courier New', monospace; text-align: right; min-width: 140px; transition: color 0.2s; }
-        button.choice-btn:hover .effect-preview { color: var(--accent); }
-        
-        .locked-text { font-size: 0.75rem; color: var(--danger); font-family: monospace; text-transform: uppercase; letter-spacing: 1px; }
+        /* Floating Particles */
+        .particles {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: -1;
+            overflow: hidden;
+        }
+        .particle {
+            position: absolute;
+            width: 4px; height: 4px;
+            background: var(--accent);
+            border-radius: 50%;
+            opacity: 0.3;
+            animation: float 20s infinite linear;
+        }
+        @keyframes float {
+            0% { transform: translateY(100vh) scale(0); opacity: 0; }
+            50% { opacity: 0.5; }
+            100% { transform: translateY(-100px) scale(1); opacity: 0; }
+        }
 
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        /* --- UI COMPONENTS --- */
+        #game-container {
+            width: 100%; max-width: 950px;
+            padding: 50px;
+            background: var(--card-bg);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            box-shadow: 0 0 80px -20px var(--accent-glow), 
+                        inset 0 0 0 1px rgba(255,255,255,0.05);
+            position: relative;
+            z-index: 10;
+            transition: all 0.5s ease;
+        }
+
+        /* Theme Toggle */
+        .theme-switch {
+            position: absolute; top: 25px; right: 25px;
+            background: var(--btn-bg);
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            display: flex; align-items: center; gap: 8px;
+            transition: all 0.2s ease;
+        }
+        .theme-switch:hover { color: var(--accent); border-color: var(--accent); }
+
+        /* HUD */
+        .hud {
+            display: grid; grid-template-columns: repeat(4, 1fr);
+            gap: 20px; margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border);
+        }
+        .hud-item { display: flex; flex-direction: column; }
+        .hud-label { 
+            font-size: 0.7rem; color: var(--text-muted); 
+            text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 6px;
+            font-weight: 600;
+        }
+        .hud-value { 
+            font-family: 'Courier New', monospace; font-weight: 700; 
+            font-size: 1.4rem; color: var(--text-main); 
+        }
+        .hud-value.highlight { color: var(--accent); text-shadow: 0 0 15px var(--accent-glow); }
+
+        /* Progress Bars */
+        .bar-container {
+            height: 6px; background: rgba(128,128,128,0.1);
+            border-radius: 3px; overflow: hidden; margin-bottom: 8px;
+        }
+        .bar-fill { height: 100%; transition: width 0.5s ease; }
+        #stress-fill { background: #ef4444; }
+        #equity-fill { background: var(--accent); }
+
+        /* Inventory */
+        #traits-box {
+            display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 40px;
+            padding: 15px; background: rgba(128,128,128,0.05); border-radius: 12px;
+        }
+        .trait {
+            font-size: 0.75rem; padding: 4px 10px; border-radius: 6px;
+            border: 1px solid var(--border);
+            font-family: monospace; letter-spacing: 0.5px;
+            animation: popIn 0.3s ease;
+        }
+        @keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        .trait.good { color: #10b981; border-color: rgba(16,185,129,0.3); background: rgba(16,185,129,0.05); }
+        .trait.bad { color: #ef4444; border-color: rgba(239,68,68,0.3); background: rgba(239,68,68,0.05); }
+
+        /* Story Text */
+        #story-text {
+            font-size: 1.25rem; line-height: 1.7; color: var(--text-muted);
+            margin-bottom: 40px; min-height: 100px; font-weight: 300;
+        }
+        .cursor { display: inline-block; width: 2px; height: 1.2em; background: var(--accent); animation: blink 1s infinite; vertical-align: text-bottom; margin-left: 2px; }
+        @keyframes blink { 50% { opacity: 0; } }
+
+        /* Choices */
+        .choices-grid { display: grid; gap: 15px; }
+        .choice-btn {
+            background: var(--btn-bg);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            padding: 24px; border-radius: 12px;
+            cursor: pointer; text-align: left;
+            transition: all 0.2s ease;
+            display: flex; justify-content: space-between; align-items: center;
+            position: relative; overflow: hidden;
+        }
+        .choice-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            background: var(--btn-hover);
+            border-color: var(--accent);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+        .choice-btn::before {
+            content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px;
+            background: var(--accent); opacity: 0; transition: opacity 0.2s;
+        }
+        .choice-btn:hover::before { opacity: 1; }
         
-        /* Custom Typewriter cursor */
-        .cursor { display: inline-block; width: 8px; height: 18px; background-color: var(--accent); animation: blink 1s infinite; vertical-align: middle; margin-left: 4px; }
-        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+        .choice-meta { text-align: right; font-size: 0.8rem; color: var(--text-muted); font-family: monospace; }
+        .choice-main { font-weight: 500; font-size: 1.05rem; }
+
+        /* Start Screen */
+        #start-overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--bg-color); z-index: 20;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            text-align: center; transition: opacity 0.8s ease;
+        }
+        h1 { 
+            font-size: 3.5rem; margin: 0 0 20px 0; letter-spacing: -2px;
+            background: linear-gradient(135deg, var(--text-main), var(--text-muted));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .start-btn {
+            background: var(--accent); color: white; border: none;
+            padding: 18px 50px; font-size: 1.2rem; border-radius: 50px;
+            cursor: pointer; font-weight: 600; letter-spacing: 1px;
+            box-shadow: 0 0 30px var(--accent-glow);
+            transition: all 0.3s ease;
+        }
+        .start-btn:hover { transform: scale(1.05); box-shadow: 0 0 50px var(--accent-glow); }
 
     </style>
 </head>
 <body>
 
-    <div id="start-screen">
-        <div class="alpha-badge">Picao AI // Studio NYC</div>
-        <h1>Unified Creator Workspace</h1>
-        <p>The "Context Tax" is destroying the creator economy.<br>You have one thought. Build the platform that refracts it with zero friction.</p>
-        <button class="play-btn" onclick="startGame()">Start Alpha Simulation</button>
+    <div class="scanlines"></div>
+    <div class="particles" id="particles"></div>
+
+    <div id="start-overlay">
+        <div style="margin-bottom: 20px; font-family: monospace; color: var(--accent); border: 1px solid var(--accent); padding: 5px 12px; border-radius: 20px;">NYC_ALPHA_v3.2</div>
+        <h1>Picao AI</h1>
+        <p style="color: var(--text-muted); font-size: 1.2rem; max-width: 500px; margin-bottom: 40px; line-height: 1.6;">
+            Build the unified workspace. Defeat the "Context Tax".<br>
+            Manage your equity, sanity, and net worth.
+        </p>
+        <button class="start-btn" onclick="initGame()">INITIALIZE WORKSPACE</button>
     </div>
 
-    <div id="game-box">
-        <div class="stat-bar">
-            <div class="stat-item"><span class="stat-label">CAPITAL</span><span class="stat-value">$<span id="funding">0</span></span></div>
-            <div class="stat-item"><span class="stat-label">WORKSPACE USERS</span><span class="stat-value"><span id="users">0</span></span></div>
-            <div class="stat-item"><span class="stat-label">BUILD STAGE</span><span class="stat-value purple"><span id="lvl">Concept</span></span></div>
-            <div class="stat-item"><span class="stat-label">FRICTION / STRESS</span><span class="stat-value"><span id="stress">0</span>%</span></div>
-        </div>
-        
-        <div id="stress-container"><div id="stress-fill"></div></div>
+    <div id="game-container" style="display:none; opacity:0;">
+        <button class="theme-switch" onclick="toggleTheme()">
+            <span id="theme-icon">☀</span> Theme
+        </button>
 
-        <div id="perks-container">
-            <span class="perks-title">System Architecture & Traits:</span>
-            <div id="perks-list" style="display: flex; gap: 8px; flex-wrap: wrap;">None</div>
-        </div>
-        
-        <div id="content-area">
-            <h2 id="node-title">System Init</h2>
-            <div style="position: relative;">
-                <p id="text-container"><span id="text"></span><span class="cursor" id="cursor"></span></p>
+        <div class="hud">
+            <div class="hud-item">
+                <span class="hud-label">Cash Runway</span>
+                <span class="hud-value" id="cash">$0</span>
             </div>
-            <div id="buttons" class="btn-list"></div>
+            <div class="hud-item">
+                <span class="hud-label">Valuation</span>
+                <span class="hud-value highlight" id="valuation">$0</span>
+            </div>
+            <div class="hud-item">
+                <span class="hud-label">Your Equity</span>
+                <span class="hud-value" id="equity">100%</span>
+                <div class="bar-container"><div class="bar-fill" id="equity-fill" style="width: 100%"></div></div>
+            </div>
+            <div class="hud-item">
+                <span class="hud-label">Founder Stress</span>
+                <span class="hud-value" id="stress">0%</span>
+                <div class="bar-container"><div class="bar-fill" id="stress-fill" style="width: 0%"></div></div>
+            </div>
+        </div>
+
+        <div id="traits-box"></div>
+
+        <div id="story-area">
+            <h2 id="node-title" style="margin: 0 0 15px 0; color: var(--text-main);">Init...</h2>
+            <div id="story-text"></div>
+            <div class="choices-grid" id="choices"></div>
         </div>
     </div>
 
     <script>
-        // Data & Picao AI Brand Lore
-        const negativePerks = ["Context Tax", "Siloed Architecture", "Burnout", "High Friction"];
-        const positivePerks = ["Zero Friction", "Flow State", "Unified Ecosystem", "Top Tier Backing", "Model Agnostic"];
-        const neutralPerks = ["Multi-Model Splitting", "Voice Refraction", "Newsletter Engine"];
+        // --- GAME STATE ---
+        let state = {
+            cash: 0,
+            valuation: 0,
+            equity: 100, // Percentage
+            stress: 0,
+            users: 0,
+            traits: [],
+            history: []
+        };
 
-        let state = { funding: 0, stress: 0, level: "Concept", users: 0, perks: [] };
-        let typeWriterTimeout = null;
+        // --- PARTICLE GENERATOR ---
+        function createParticles() {
+            const container = document.getElementById('particles');
+            for(let i=0; i<30; i++) {
+                let p = document.createElement('div');
+                p.className = 'particle';
+                p.style.left = Math.random() * 100 + 'vw';
+                p.style.animationDuration = (Math.random() * 10 + 10) + 's';
+                p.style.animationDelay = Math.random() * 5 + 's';
+                container.appendChild(p);
+            }
+        }
+        createParticles();
 
-        function startGame() {
-            const startScreen = document.getElementById('start-screen');
-            const gameBox = document.getElementById('game-box');
-            
-            startScreen.style.opacity = '0';
-            startScreen.style.transform = 'translateY(-30px) scale(0.95)';
-            
-            setTimeout(() => {
-                startScreen.style.display = 'none';
-                gameBox.style.display = 'block';
-                void gameBox.offsetWidth;
-                gameBox.style.opacity = '1';
-                gameBox.style.transform = 'translateY(0) scale(1)';
-                updateGame('start');
-            }, 600);
+        // --- THEME TOGGLE ---
+        function toggleTheme() {
+            const body = document.body;
+            const current = body.getAttribute('data-theme');
+            const icon = document.getElementById('theme-icon');
+            if (current === 'light') {
+                body.setAttribute('data-theme', 'dark');
+                icon.innerText = '☀';
+            } else {
+                body.setAttribute('data-theme', 'light');
+                icon.innerText = '☾';
+            }
         }
 
-        // --- THE STORY DATA ---
-        const story = {
-            // PHASE 1: INCEPTION
+        // --- TYPEWRITER EFFECT ---
+        let typeInterval;
+        function typeText(text, callback) {
+            const el = document.getElementById('story-text');
+            el.innerHTML = '';
+            let i = 0;
+            clearInterval(typeInterval);
+            
+            // Add cursor
+            const cursor = document.createElement('span');
+            cursor.className = 'cursor';
+            el.appendChild(cursor);
+
+            typeInterval = setInterval(() => {
+                if (i < text.length) {
+                    cursor.before(text.charAt(i));
+                    i++;
+                } else {
+                    clearInterval(typeInterval);
+                    if(callback) callback();
+                }
+            }, 10); // Typing speed
+        }
+
+        // --- STORY DATA ---
+        const nodes = {
             start: {
-                title: "The Rebellion Against Friction",
-                text: "Existing tools are silos. Creators are losing hours to the 'Context Tax'—switching between Notion, Canva, and ChatGPT. You envision Picao AI: a unified ecosystem where one thought equals infinite reach. How do you fund the Alpha?",
+                title: "Day 0: The Context Tax",
+                text: "You are a creator. You spend 4 hours a day switching between Notion, Canva, and ChatGPT. It's destroying your flow. You have an idea for Picao AI: A unified workspace where 'One Thought = Infinite Reach.' You have $5k in savings.",
                 options: [
-                    { text: "Boot-strap it in secret (Maintain 100% control)", next: "alpha_build", perk: "Zero Friction", effect: { stress: 20, funding: 10000, lvl: "NYC_ALPHA_v1" } },
-                    { text: "Pitch VCs: 'We are the Workflow OS'", next: "vc_pitch", effect: { stress: 10 } },
-                    { text: "Build in public on X/Twitter as an indie dev", next: "alpha_build", perk: "Flow State", effect: { stress: 35, funding: 5000, users: 500, lvl: "NYC_ALPHA_v1" } }
+                    { text: "Code it yourself in the basement", next: "mvp_build", equity: 0, cash: 5000, val: 1000000, stress: 20, trait: "Solo Dev" },
+                    { text: "Apply to Y Combinator immediately", next: "yc_interview", stress: 10, val: 2000000 },
+                    { text: "Tweet the idea to see if it goes viral", next: "viral_test", stress: 5, val: 1000000 }
                 ]
             },
-            vc_pitch: {
-                title: "Selling the Vision",
-                text: "You step into a VC firm in NYC. You tell them Picao AI isn't just a tool; it's a rebellion. They love the vision, but they want you to focus purely on enterprise B2B instead of creators.",
+            viral_test: {
+                title: "Validation",
+                text: "Your thread 'The Context Tax is Killing Us' goes viral. 5,000 signups overnight. Investors are sliding into your DMs.",
                 options: [
-                    { text: "Take their $500k and pivot to Enterprise", next: "enterprise_trap", perk: "Siloed Architecture", effect: { funding: 500000, stress: 25, lvl: "Corporate Beta" } },
-                    { text: "Reject the pivot. Walk away with nothing.", next: "alpha_build", perk: "Zero Friction", effect: { stress: 15, funding: 2000, lvl: "NYC_ALPHA_v1" } },
-                    { text: "Convince them creators ARE the new enterprise", next: "alpha_build", perk: "Top Tier Backing", effect: { funding: 250000, stress: 30, lvl: "NYC_ALPHA_v1" } }
+                    { text: "Raise a Pre-Seed Round ($500k)", next: "seed_round", cash: 500000, equity: -10, val: 5000000, trait: "Hype Beast" },
+                    { text: "Bootstrap with Pre-Sales", next: "mvp_build", cash: 20000, stress: 30, trait: "Indie Hacker" }
                 ]
             },
-
-            // PHASE 2: THE ALPHA LAUNCH
-            alpha_build: {
-                title: "NYC_ALPHA_v2.6",
-                text: "Your core engine is live. The UI is sleek. You announce to the world: 'Join the Private Alpha. 14 Spots Remaining.' Who do you give these exclusive spots to?",
+            mvp_build: {
+                title: "The MVP Grind",
+                text: "You're coding 16 hours a day. The 'Refraction Engine' works, but the UI is ugly. Users love the logic but hate the design.",
                 options: [
-                    { text: "Give all 14 spots to massive tech influencers", next: "feature_crossroad", effect: { users: 15000, stress: 30 } },
-                    { text: "Give them to hardcore, everyday writers", next: "feature_crossroad", perk: "Unified Ecosystem", effect: { users: 1000, stress: -10 } },
-                    { text: "Charge $1,000 per spot for instant runway", next: "feature_crossroad", effect: { funding: 14000, users: 14, stress: 10 } }
+                    { text: "Hire a premium Designer", next: "design_polish", cash: -10000, stress: -5, val: 2000000 },
+                    { text: "Keep shipping features (Ugly but functional)", next: "tech_debt_city", stress: 20, trait: "Function Over Form" }
                 ]
             },
-
-            // PHASE 3: PRODUCT ROADMAP
-            feature_crossroad: {
-                title: "The Refraction Engine",
-                text: "Users are in the workspace. They love capturing their ideas via the 2-minute voice recorder. But they want you to expand the 'Refract' feature. What do you build next?",
+            yc_interview: {
+                title: "The Interview",
+                text: "Sam Altman asks: 'Why can't Google just build this?' You freeze for a second.",
                 options: [
-                    { text: "Build 'Multi-Model Splitting' (1 thought to 12 assets)", next: "context_tax_crisis", perk: "Multi-Model Splitting", effect: { users: 5000, stress: 15, funding: -2000 } },
-                    { text: "Build 'Model Agnostic Intelligence' (Best LLM per task)", next: "context_tax_crisis", perk: "Model Agnostic", effect: { users: 3000, stress: 10, funding: -5000 } },
-                    { text: "Build the 'Newsletter Engine' for long-form dives", next: "context_tax_crisis", perk: "Newsletter Engine", effect: { users: 2000, funding: 5000 } },
-                    { text: "[Requires: Top Tier Backing] Build Direct Native API Publishing", next: "context_tax_crisis", reqPerk: "Top Tier Backing", effect: { users: 20000, stress: 25, funding: -50000 } }
+                    { text: "Say: 'They are too slow. We are native.'", next: "yc_accepted", cash: 125000, equity: -7, val: 3000000, trait: "YC Alumni" },
+                    { text: "Say: 'Because our AI is model-agnostic.'", next: "yc_rejected", stress: 15 }
                 ]
             },
-
-            // PHASE 4: THE CRISIS
-            context_tax_crisis: {
-                title: "The Context Tax Returns",
-                text: "As Picao scales, users complain that exporting content to Canva and Notion manually is bringing the 'Context Tax' back. They are losing their flow state.",
+            yc_rejected: {
+                title: "Rejection",
+                text: "They passed. 'Too niche,' they said. Fuel for the fire.",
                 options: [
-                    { text: "Spend 2 months coding Auto-Import integrations", next: "giant_clone", effect: { funding: -15000, stress: 20, lvl: "v3.0 Scale" } },
-                    { text: "Ignore them. Force them to use Picao for everything.", next: "giant_clone", perk: "Context Tax", removePerk: "Zero Friction", effect: { users: -5000, stress: -10 } },
-                    { text: "[Requires: Unified Ecosystem] Deploy the seamless web-extension", next: "giant_clone", reqPerk: "Unified Ecosystem", effect: { users: 10000, stress: 5, funding: 10000, lvl: "v3.0 Scale" } }
+                    { text: "Prove them wrong. Build faster.", next: "mvp_build", stress: 25, trait: "Chip on Shoulder" }
                 ]
             },
-            enterprise_trap: {
-                title: "The Golden Handcuffs",
-                text: "You took the VC money and built B2B software. Picao AI is now just a boring dashboard for compliance officers. The 'Rebellion' is dead, but the bank account is full.",
+            yc_accepted: {
+                title: "Batch W26",
+                text: "You're in. The network is powerful. You launch on Demo Day.",
                 options: [
-                    { text: "Sell out completely to Private Equity", next: "win_corporate", effect: { funding: 35000000, stress: -50 } },
-                    { text: "Secretly use company funds to rebuild the Creator Workspace", next: "alpha_build", perk: "High Friction", effect: { stress: 45, funding: -100000, users: 0 } }
+                    { text: "Raise a massive Seed Round ($3M)", next: "series_a_grind", cash: 3000000, equity: -20, val: 15000000 },
+                    { text: "Stay lean. Raise just enough ($500k)", next: "slow_growth", cash: 500000, equity: -10, val: 8000000 }
                 ]
             },
-
-            // PHASE 5: THE SHOWDOWN
-            giant_clone: {
-                title: "The Tech Giant Clone",
-                text: "Emergency. A massive Silicon Valley tech giant just announced a 'Unified Workspace' that looks exactly like Picao AI. They are offering it for free.",
+            seed_round: {
+                title: "Seed Funded",
+                text: "Money in the bank. Now the clock is ticking. You need 10k DAU (Daily Active Users) in 6 months.",
                 options: [
-                    { text: "[Requires: Context Tax] Your high friction drives users away. You lose.", next: "lose_competition", reqPerk: "Context Tax", effect: { stress: 50 } },
-                    { text: "[Requires: Model Agnostic] Your superior AI logic beats their generic clone.", next: "endgame", reqPerk: "Model Agnostic", effect: { users: 50000, stress: 20, funding: 200000 } },
-                    { text: "Rally the creator community. Call out the giant on X.", next: "endgame", effect: { users: 100000, stress: 45, funding: 50000 } },
-                    { text: "Pivot heavily into Voice Cloning to stay unique", next: "endgame", effect: { funding: -20000, users: 30000, stress: 25 } }
+                    { text: "Spend it on Ads", next: "marketing_burn", cash: -200000, stress: 10 },
+                    { text: "Hire a Rockstar Engineer", next: "product_market_fit", cash: -100000, stress: -10, trait: "10x Team" }
                 ]
             },
-
-            // PHASE 6: ENDGAME
-            endgame: {
-                title: "The Peak Flow State",
-                text: "You survived the clone wars. Picao AI is processing millions of 'Refractions' a day. Creators are ideating and launching faster than ever in history. The board calls a meeting.",
+            product_market_fit: {
+                title: "Product Market Fit",
+                text: "It's clicking. Creators are using Picao for 6 hours a day. Retention is 80%. Series A investors are knocking.",
                 options: [
-                    { text: "Ring the Bell. Launch the Picao AI IPO.", next: "win_ipo", effect: { funding: 1500000000, stress: 50, lvl: "PUBLIC" } },
-                    { text: "Accept a $100M acquisition from Stripe", next: "win_corporate", effect: { funding: 100000000, stress: -80, lvl: "ACQUIRED" } },
-                    { text: "[Requires: Zero Friction] Stay independent. Rule the creator class.", next: "win_indie", reqPerk: "Zero Friction", effect: { funding: 5000000, stress: -40, lvl: "EMPIRE" } }
+                    { text: "Raise Series A ($15M)", next: "series_a_grind", cash: 15000000, equity: -15, val: 60000000 },
+                    { text: "Reject them. We are profitable.", next: "indie_paradise", trait: "Profit First" }
                 ]
             },
-
-            // --- FAIL STATES ---
-            lose_burnout: {
-                title: "CRITICAL SYSTEM FAILURE",
-                text: "The Context Tax broke you. You managed too many variables, suffered severe burnout, and collapsed. The Picao AI servers were shut down while you recovered. Protect your peace next time.",
-                options: [{ text: "Reboot Simulation", next: "start", reset: true }]
+            series_a_grind: {
+                title: "Scaling Pains",
+                text: "You have 50 employees. Half of them don't know your name. The culture is diluting. A competitor launches a clone.",
+                options: [
+                    { text: "Acquire the competitor", next: "monopoly", cash: -5000000, val: 80000000, stress: 20 },
+                    { text: "Focus on Enterprise Sales", next: "b2b_pivot", stress: 30, trait: "Corporate suit" }
+                ]
             },
-            lose_bankrupt: {
-                title: "API BILLING DEPLETED",
-                text: "You ran out of runway. The LLM API bills stacked up, and Stripe disabled your account. Picao AI is dead. You have to go back to juggling 10 different apps.",
-                options: [{ text: "Reboot Simulation", next: "start", reset: true }]
+            monopoly: {
+                title: "The Unicorn Run",
+                text: "You crushed the competition. Picao is the standard. You are valued at $1 Billion.",
+                options: [
+                    { text: "IPO (Go Public)", next: "win_ipo", equity: -5, val: 1200000000 },
+                    { text: "Sell to Microsoft", next: "win_acquisition", val: 800000000 }
+                ]
             },
-            lose_competition: {
-                title: "CRUSHED BY SILOS",
-                text: "Because you introduced 'Context Tax' back into your own product, you couldn't defend against the Tech Giant. Users left for the free, albeit clunky, alternative.",
-                options: [{ text: "Reboot Simulation", next: "start", reset: true }]
-            },
-
-            // --- WIN STATES ---
-            win_corporate: {
-                title: "ACQUISITION COMPLETE 💰",
-                text: "You sold Picao AI. The 'Context Tax' is someone else's problem now. You walk away with generational wealth. You succeeded, but you no longer control the workspace.",
-                options: [{ text: "Initialize New Startup", next: "start", reset: true }]
-            },
-            win_indie: {
-                title: "THE UNIFIED EMPIRE 👑",
-                text: "Total victory. Picao AI remains independent. You eliminated friction for millions of creators while maintaining complete ownership. You have achieved permanent Flow State.",
-                options: [{ text: "Initialize New Startup", next: "start", reset: true }]
-            },
+            
+            // --- ENDINGS ---
             win_ipo: {
-                title: "UNICORN REFRACTION 🦄",
-                text: "You ring the bell at the NYSE. Picao AI is now the global standard Workflow OS. You are a billionaire. The vision of 'One Thought. Infinite Reach.' is now a worldwide reality.",
-                options: [{ text: "Initialize New Startup", next: "start", reset: true }]
+                title: "NASDAQ: PICO",
+                text: "You rang the bell. Confetti everywhere. You are the CEO of a public company. The Context Tax is dead.",
+                end: true
+            },
+            win_acquisition: {
+                title: "The Exit",
+                text: "You sold. The wire transfer hit your account. You bought an island. Was it worth it?",
+                end: true
+            },
+            indie_paradise: {
+                title: "Indie King",
+                text: "You own 80% of a company making $10M profit a year. You work 20 hours a week. Pure freedom.",
+                end: true, val: 50000000
+            },
+            game_over_stress: {
+                title: "Burnout Collapse",
+                text: "You pushed too hard. Hospitalized for exhaustion. The board replaced you while you recovered.",
+                end: true, val: 0
+            },
+            game_over_cash: {
+                title: "Bankrupt",
+                text: "Runway hits zero. Servers shut down. It was a good dream.",
+                end: true, val: 0
             }
         };
 
-        function formatFunding(num) {
+        // --- RANDOM EVENTS ---
+        const randomEvents = [
+            { text: "EVENT: Viral Tweet! +10k Users", cash: 0, val: 500000, stress: -5 },
+            { text: "EVENT: AWS Bill Spike! -$20k", cash: -20000, val: 0, stress: 10 },
+            { text: "EVENT: Co-Founder Drama. Stress Up.", cash: 0, val: 0, stress: 20 },
+            { text: "EVENT: Featured on TechCrunch.", cash: 0, val: 1000000, stress: 0 }
+        ];
+
+        // --- GAME LOGIC ---
+        function initGame() {
+            document.getElementById('start-overlay').style.opacity = 0;
+            setTimeout(() => {
+                document.getElementById('start-overlay').style.display = 'none';
+                const container = document.getElementById('game-container');
+                container.style.display = 'block';
+                // Trigger reflow
+                void container.offsetWidth;
+                container.style.opacity = 1;
+                loadNode('start');
+            }, 800);
+        }
+
+        function loadNode(nodeKey) {
+            const node = nodes[nodeKey];
+            
+            // Random Event Trigger (20% chance if not start/end)
+            if (nodeKey !== 'start' && !node.end && Math.random() < 0.25) {
+                const event = randomEvents[Math.floor(Math.random() * randomEvents.length)];
+                state.cash += event.cash;
+                state.valuation += event.val;
+                state.stress += event.stress;
+                updateHUD();
+                // We show the event as a toast or append to text, here we just append logic
+                // For simplicity in this structure, we'll flash it in the next text render
+                node.text = `[${event.text}]<br><br>` + node.text;
+            }
+
+            document.getElementById('node-title').innerText = node.title;
+            
+            // Clear choices
+            const choicesBox = document.getElementById('choices');
+            choicesBox.innerHTML = '';
+            choicesBox.style.opacity = 0;
+
+            // Type text
+            typeText(node.text, () => {
+                // Render choices after typing
+                choicesBox.style.opacity = 1;
+                
+                if (node.end) {
+                    renderEndScreen(node);
+                    return;
+                }
+
+                node.options.forEach(opt => {
+                    const btn = document.createElement('button');
+                    btn.className = 'choice-btn';
+                    
+                    let meta = [];
+                    if(opt.cash) meta.push((opt.cash > 0 ? '+' : '') + formatMoney(opt.cash));
+                    if(opt.equity) meta.push(opt.equity + '% Equity');
+                    if(opt.stress) meta.push(opt.stress + '% Stress');
+                    
+                    btn.innerHTML = `
+                        <span class="choice-main">${opt.text}</span>
+                        <span class="choice-meta">${meta.join(' | ')}</span>
+                    `;
+                    
+                    btn.onclick = () => makeChoice(opt);
+                    choicesBox.appendChild(btn);
+                });
+            });
+        }
+
+        function makeChoice(opt) {
+            // Apply effects
+            if(opt.cash) state.cash += opt.cash;
+            if(opt.valuation) state.valuation = opt.val || (state.valuation + (opt.val || 0)); // simple logic
+            if(opt.val && !opt.valuation) state.valuation = opt.val; // Hard set if provided
+            if(opt.equity) state.equity += opt.equity;
+            if(opt.stress) state.stress += opt.stress;
+            if(opt.trait) addTrait(opt.trait);
+
+            // Clamp values
+            if(state.stress < 0) state.stress = 0;
+            if(state.equity < 0) state.equity = 0;
+
+            updateHUD();
+
+            // Check Fail States
+            if (state.stress >= 100) {
+                loadNode('game_over_stress');
+            } else if (state.cash < 0 && state.valuation > 0) { // Allow debt if valuation is 0 (start)
+                loadNode('game_over_cash');
+            } else {
+                loadNode(opt.next);
+            }
+        }
+
+        function addTrait(trait) {
+            if(!state.traits.includes(trait)) {
+                state.traits.push(trait);
+                const badge = document.createElement('span');
+                badge.className = 'trait ' + (['10x Team', 'Profit First', 'YC Alumni'].includes(trait) ? 'good' : 'neutral');
+                badge.innerText = trait;
+                document.getElementById('traits-box').appendChild(badge);
+            }
+        }
+
+        function renderEndScreen(node) {
+            // Calculate Net Worth
+            // Formula: (Valuation * (Equity/100)) + Cash
+            const netWorth = (state.valuation * (state.equity / 100)) + state.cash;
+            
+            const choicesBox = document.getElementById('choices');
+            choicesBox.innerHTML = `
+                <div style="background: rgba(168, 85, 247, 0.1); border: 1px solid var(--accent); padding: 30px; border-radius: 12px; text-align: center;">
+                    <h3 style="margin-top:0; color: var(--accent);">CAREER SUMMARY</h3>
+                    <p style="font-size: 1.5rem; margin: 10px 0;">Final Net Worth: <strong style="color: var(--text-main);">${formatMoney(netWorth)}</strong></p>
+                    <p>Equity Retained: ${state.equity}%</p>
+                    <p>Company Valuation: ${formatMoney(state.valuation)}</p>
+                    <button class="choice-btn" style="justify-content: center; margin-top: 20px;" onclick="location.reload()">START NEW COMPANY</button>
+                </div>
+            `;
+        }
+
+        function updateHUD() {
+            document.getElementById('cash').innerText = formatMoney(state.cash);
+            document.getElementById('valuation').innerText = formatMoney(state.valuation);
+            document.getElementById('equity').innerText = state.equity + '%';
+            document.getElementById('stress').innerText = state.stress + '%';
+            
+            document.getElementById('stress-fill').style.width = state.stress + '%';
+            document.getElementById('equity-fill').style.width = state.equity + '%';
+        }
+
+        function formatMoney(num) {
             if (num >= 1000000000) return '$' + (num / 1000000000).toFixed(1) + 'B';
             if (num >= 1000000) return '$' + (num / 1000000).toFixed(1) + 'M';
+            if (num >= 1000) return '$' + (num / 1000).toFixed(0) + 'k';
             return '$' + num.toLocaleString();
         }
 
-        // Typewriter Effect Logic
-        function typeWriter(text, i, cb) {
-            const textElement = document.getElementById("text");
-            if (i < text.length) {
-                textElement.innerHTML += text.charAt(i);
-                typeWriterTimeout = setTimeout(function() {
-                    typeWriter(text, i + 1, cb);
-                }, 15); // Speed of typing
-            } else {
-                if(cb) cb();
-            }
-        }
-
-        function updateGame(nodeKey) {
-            const node = story[nodeKey];
-            const btnBox = document.getElementById('buttons');
-            const textElement = document.getElementById("text");
-            
-            // Clear previous typing timeouts
-            if(typeWriterTimeout) clearTimeout(typeWriterTimeout);
-            
-            // Hide buttons while typing
-            btnBox.style.display = 'none';
-            btnBox.innerHTML = '';
-            textElement.innerHTML = '';
-
-            // Handle Hard Resets
-            if (node.options && node.options[0].reset) {
-                state = { funding: 0, stress: 0, level: "Concept", users: 0, perks: [] };
-            }
-
-            // Render Title
-            document.getElementById('node-title').innerText = node.title;
-            
-            // Build Buttons (Memory)
-            node.options.forEach(opt => {
-                const btn = document.createElement('button');
-                btn.className = 'choice-btn';
-                
-                let previewText = "";
-                if(opt.effect) {
-                    let changes = [];
-                    if(opt.effect.funding) changes.push(`${opt.effect.funding > 0 ? '+' : ''}$${Math.abs(opt.effect.funding)}`);
-                    if(opt.effect.users) changes.push(`${opt.effect.users > 0 ? '+' : ''}${Math.abs(opt.effect.users)} Users`);
-                    if(opt.effect.stress) changes.push(`${opt.effect.stress > 0 ? '+' : ''}${opt.effect.stress}% Stress`);
-                    if(changes.length > 0) previewText = `<span class="effect-preview">[${changes.join(' | ')}]</span>`;
-                }
-
-                const isLocked = opt.reqPerk && !state.perks.includes(opt.reqPerk);
-                
-                if (isLocked) {
-                    btn.innerHTML = `<div><span class="locked-text">Locked: Requires [${opt.reqPerk}]</span><br><span style="color: #71717a; font-size: 0.95rem;">${opt.text}</span></div>`;
-                    btn.disabled = true;
-                } else {
-                    let perkAddText = opt.perk ? `<br><span style="font-size: 0.75rem; color: var(--accent); margin-top: 6px; display: inline-block;">+ Trait Acquired: [${opt.perk}]</span>` : '';
-                    let perkRemoveText = opt.removePerk ? `<br><span style="font-size: 0.75rem; color: var(--danger); margin-top: 6px; display: inline-block;">- Trait Lost: [${opt.removePerk}]</span>` : '';
-                    
-                    btn.innerHTML = `<div>${opt.text}${perkAddText}${perkRemoveText}</div> ${previewText}`;
-                    
-                    btn.onclick = () => {
-                        if (opt.effect) {
-                            state.funding += (opt.effect.funding || 0);
-                            state.stress += (opt.effect.stress || 0);
-                            if(opt.effect.lvl) state.level = opt.effect.lvl;
-                            state.users += (opt.effect.users || 0);
-                            
-                            if(state.stress < 0) state.stress = 0;
-                            if(state.users < 0) state.users = 0;
-                        }
-
-                        if (opt.perk && !state.perks.includes(opt.perk)) state.perks.push(opt.perk);
-                        if (opt.removePerk) state.perks = state.perks.filter(p => p !== opt.removePerk);
-                        
-                        if (state.stress >= 100 && !nodeKey.startsWith('lose_') && !nodeKey.startsWith('win_')) {
-                            updateGame('lose_burnout');
-                        } else if (state.funding < -25000 && !nodeKey.startsWith('lose_') && !nodeKey.startsWith('win_')) {
-                            updateGame('lose_bankrupt');
-                        } else {
-                            updateGame(opt.next);
-                        }
-                    };
-                }
-                btnBox.appendChild(btn);
-            });
-
-            // Trigger Typewriter, then show buttons
-            typeWriter(node.text, 0, () => {
-                btnBox.style.display = 'grid';
-                btnBox.classList.remove('animate-fade');
-                void btnBox.offsetWidth;
-                btnBox.classList.add('animate-fade');
-            });
-
-            // Update UI Counters
-            document.getElementById('funding').innerText = formatFunding(state.funding).replace('$', '');
-            document.getElementById('users').innerText = state.users.toLocaleString();
-            document.getElementById('stress').innerText = state.stress;
-            document.getElementById('lvl').innerText = state.level;
-            
-            // Render Inventory / Traits
-            const perksList = document.getElementById('perks-list');
-            if (state.perks.length === 0) {
-                perksList.innerHTML = "<span style='opacity: 0.3; font-family: monospace; font-size: 0.8rem;'>System Nominal...</span>";
-            } else {
-                perksList.innerHTML = state.perks.map(p => {
-                    let styleClass = 'perk-neutral';
-                    if (positivePerks.includes(p)) styleClass = 'perk-positive';
-                    if (negativePerks.includes(p)) styleClass = 'perk-negative';
-                    return `<span class="perk-badge ${styleClass}">${p}</span>`;
-                }).join('');
-            }
-
-            // Animate Stress Bar
-            const stressFill = document.getElementById('stress-fill');
-            stressFill.style.width = `${Math.min(state.stress, 100)}%`;
-            if (state.stress < 40) { 
-                stressFill.style.background = "var(--success)"; 
-                stressFill.style.boxShadow = "0 0 10px var(--success)";
-            } else if (state.stress < 75) { 
-                stressFill.style.background = "#f59e0b"; 
-                stressFill.style.boxShadow = "0 0 10px #f59e0b";
-            } else { 
-                stressFill.style.background = "var(--danger)"; 
-                stressFill.style.boxShadow = "0 0 10px var(--danger)";
-            }
-        }
     </script>
 </body>
 </html>
