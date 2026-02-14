@@ -3,35 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Picao AI: Founder Simulator [Unlocked]</title>
+    <title>Picao AI: Founder Simulator</title>
     <script src="https://unpkg.com/lucide@latest"></script>
     <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500;600;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    
     <style>
-        /* --- PICAO OFFICIAL COLORS --- */
+        /* --- THEME --- */
         :root {
-            /* Backgrounds: Clean White/Cream for Light Mode */
-            --bg-color: #F8FAFC; 
-            --card-bg: #FFFFFF;
-            --sidebar-bg: #F1F5F9;
-            
-            /* Typography */
-            --text-main: #0F172A; /* Slate 900 */
-            --text-muted: #64748B; /* Slate 500 */
-            
-            /* Picao Accents (Extracted from picaoai.com) */
+            --bg-color: #020202;
+            --card-bg: #0A0A0A;
+            --sidebar-bg: #050505;
+            --text-main: #FFFFFF;
+            --text-muted: #9CA3AF;
+            --border: #27272A;
             --accent: #6366f1; /* Picao Indigo */
-            --accent-hover: #4f46e5;
-            --accent-secondary: #a855f7; /* Picao Purple */
-            
-            /* Status Colors */
-            --danger: #ef4444;
-            --success: #10b981;
-            
-            /* Borders & Shadows */
-            --border: #E2E8F0;
-            --shadow-soft: 0 4px 20px -2px rgba(0, 0, 0, 0.05);
-            
-            /* Fonts */
+            --accent-glow: rgba(99, 102, 241, 0.3);
+            --danger: #EF4444;
+            --success: #10B981;
             --font-serif: 'Lora', serif;
             --font-sans: 'Inter', sans-serif;
             --font-mono: 'JetBrains Mono', monospace;
@@ -41,10 +29,8 @@
 
         body {
             background-color: var(--bg-color);
-            /* Picao-style grainy gradient background */
-            background-image: 
-                radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.15) 0px, transparent 50%),
-                radial-gradient(at 100% 100%, rgba(168, 85, 247, 0.15) 0px, transparent 50%);
+            background-image: radial-gradient(#1a1a1a 1px, transparent 1px);
+            background-size: 32px 32px;
             color: var(--text-main);
             font-family: var(--font-sans);
             margin: 0;
@@ -55,113 +41,100 @@
             justify-content: center;
         }
 
-        /* --- NAVIGATION --- */
-        .back-home {
-            position: fixed; top: 20px; left: 20px; z-index: 2000;
-            background: white; border: 1px solid var(--border);
-            color: var(--text-muted); padding: 8px 16px; border-radius: 99px;
-            text-decoration: none; font-size: 0.8rem; font-weight: 600;
-            transition: all 0.2s ease; display: flex; align-items: center; gap: 8px;
-            box-shadow: var(--shadow-soft);
+        /* --- VISIBILITY SAFEGUARDS --- */
+        /* Ensure Start Screen is visible even if JS fails */
+        #start-screen {
+            position: fixed; inset: 0; background: var(--bg-color); z-index: 999;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            transition: transform 0.8s cubic-bezier(0.8, 0, 0.2, 1);
+            opacity: 1; /* Force visible */
+            visibility: visible;
         }
-        .back-home:hover { color: var(--accent); border-color: var(--accent); transform: translateY(-1px); }
-
-        /* --- GAME CONTAINER --- */
+        
         #app-container {
             width: 100%; max-width: 1200px; height: 95vh;
             display: flex; background: var(--card-bg);
-            border: 1px solid var(--border); border-radius: 20px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15); 
-            overflow: hidden; position: relative; z-index: 10;
+            border: 1px solid var(--border); border-radius: 12px;
+            box-shadow: 0 50px 100px -20px rgba(0,0,0,0.5);
+            overflow: hidden; position: relative; 
+            opacity: 0; /* Hidden until game starts */
+            transform: scale(0.99);
+            transition: opacity 0.5s ease, transform 0.5s ease; z-index: 10;
         }
 
-        /* --- SIDEBAR --- */
-        .sidebar {
-            width: 280px; background: var(--sidebar-bg);
-            border-right: 1px solid var(--border); padding: 32px;
-            display: flex; flex-direction: column; gap: 24px; flex-shrink: 0; overflow-y: auto;
+        /* --- UI ELEMENTS --- */
+        .back-home {
+            position: fixed; top: 24px; left: 24px; z-index: 2000;
+            background: rgba(0,0,0,0.5); border: 1px solid var(--border);
+            color: var(--text-muted); padding: 10px 20px; border-radius: 99px;
+            text-decoration: none; font-size: 0.8rem; font-weight: 500;
+            transition: all 0.2s ease; display: flex; align-items: center; gap: 8px;
+            backdrop-filter: blur(10px);
         }
-        .brand-header { 
-            font-family: var(--font-serif); font-weight: 700; font-size: 1.2rem; 
-            background: linear-gradient(135deg, var(--accent), var(--accent-secondary));
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            margin-bottom: 10px; 
-        }
+        .back-home:hover { color: white; border-color: var(--accent); }
+
+        .sidebar { width: 280px; background: var(--sidebar-bg); border-right: 1px solid var(--border); padding: 32px; display: flex; flex-direction: column; gap: 24px; flex-shrink: 0; overflow-y: auto; }
+        .brand-header { font-family: var(--font-serif); font-weight: 700; font-size: 1.1rem; letter-spacing: -0.5px; color: white; }
         
-        .stat-block { border-bottom: 1px solid var(--border); padding-bottom: 16px; }
+        .stat-block { border-bottom: 1px solid var(--border); padding-bottom: 15px; }
         .stat-block:last-child { border: none; }
+        .stat-row { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 5px; }
+        .stat-label { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; font-weight: 600; }
+        .stat-value { font-family: var(--font-mono); font-size: 0.9rem; font-weight: 600; color: white; }
+        .stat-value.danger { color: var(--danger); }
         
-        .stat-row { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px; }
-        .stat-label { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; font-weight: 700; }
-        .stat-value { font-family: var(--font-mono); font-size: 0.9rem; font-weight: 600; color: var(--text-main); }
-        
-        .bar-container { background: #cbd5e1; height: 4px; border-radius: 99px; overflow: hidden; margin-top: 4px; }
+        .bar-container { margin-top: 6px; background: #1a1a1a; height: 4px; border-radius: 99px; overflow: hidden; }
         .bar-fill { height: 100%; transition: width 0.5s ease; background: var(--accent); }
-        
-        /* --- MAIN VIEW --- */
+
         .main-view { flex-grow: 1; display: flex; flex-direction: column; position: relative; }
-        #story-log { 
-            flex-grow: 1; padding: 60px; padding-bottom: 120px; 
-            overflow-y: auto; scroll-behavior: smooth; 
-            display: flex; flex-direction: column; gap: 60px; 
-        }
+        #story-log { flex-grow: 1; padding: 60px; padding-bottom: 120px; overflow-y: auto; scroll-behavior: smooth; display: flex; flex-direction: column; gap: 60px; }
 
         /* --- STORY NODES --- */
-        .story-node { 
-            animation: slideIn 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; 
-            max-width: 700px; margin: 0 auto; width: 100%; 
-        }
-        @keyframes slideIn { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
+        .story-node { animation: slideIn 0.4s ease-out forwards; max-width: 650px; margin: 0 auto; width: 100%; }
+        @keyframes slideIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-        .node-header { 
-            font-family: var(--font-mono); color: var(--accent); 
-            font-size: 0.75rem; margin-bottom: 16px; 
-            display: flex; align-items: center; gap: 12px; 
-            text-transform: uppercase; letter-spacing: 1px; font-weight: 700;
-        }
+        .node-header { font-family: var(--font-mono); color: var(--accent); font-size: 0.7rem; margin-bottom: 16px; display: flex; align-items: center; gap: 12px; opacity: 0.8; text-transform: uppercase; letter-spacing: 1px; }
         .node-line { height: 1px; flex-grow: 1; background: var(--border); }
-        
-        .node-text { 
-            font-size: 1.25rem; line-height: 1.6; color: var(--text-main); 
-            margin-bottom: 32px; font-family: var(--font-serif); 
-        }
-        .node-text b { color: var(--accent-secondary); }
+        .node-text { font-size: 1.15rem; line-height: 1.7; color: var(--text-main); margin-bottom: 32px; white-space: pre-wrap; font-family: var(--font-serif); }
+        .node-text b { color: var(--accent); }
 
         .choice-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
         .choice-grid.single { grid-template-columns: 1fr; }
         
         .choice-btn {
-            background: white; border: 1px solid var(--border); color: var(--text-main);
-            padding: 24px; border-radius: 12px; text-align: left; cursor: pointer;
+            background: rgba(255,255,255,0.03); border: 1px solid var(--border); color: white;
+            padding: 24px; border-radius: 8px; text-align: left; cursor: pointer;
             transition: all 0.2s; position: relative; overflow: hidden;
             display: flex; align-items: center; justify-content: space-between;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
         }
-        .choice-btn:hover { 
-            border-color: var(--accent); transform: translateY(-2px); 
-            box-shadow: 0 10px 25px -5px rgba(99, 102, 241, 0.15); 
-        }
-        .choice-btn:disabled { opacity: 0.5; cursor: not-allowed; filter: grayscale(1); }
-        .choice-text { font-family: var(--font-sans); font-weight: 600; font-size: 0.95rem; }
-        
-        /* LOCKED STATE */
-        .choice-btn.locked { opacity: 0.6; background: #F1F5F9; border-style: dashed; pointer-events: none; color: var(--text-muted); }
+        .choice-btn:hover { border-color: var(--accent); transform: translateY(-2px); background: rgba(99, 102, 241, 0.1); }
+        .choice-btn:disabled { opacity: 0.3; cursor: not-allowed; filter: grayscale(1); pointer-events: none; }
+        .choice-btn.locked { opacity: 0.3; border-style: dashed; pointer-events: none; }
+        .choice-text { font-family: var(--font-sans); font-weight: 500; font-size: 0.95rem; }
 
-        /* --- FLOATY TEXT --- */
+        /* Titles */
+        h1 { font-family: var(--font-serif); font-size: 4rem; margin: 0 0 20px 0; color: white; font-style: italic; font-weight: 600; letter-spacing: -2px; }
+        h1 span { color: var(--accent); }
+        .subtitle { color: var(--text-muted); margin-bottom: 40px; font-size: 1.1rem; line-height: 1.6; text-align: center; max-width: 500px; }
+        
+        .start-btn { 
+            background: white; color: black; border: none; padding: 18px 50px; 
+            font-size: 0.9rem; border-radius: 99px; font-weight: 700; cursor: pointer; transition: 0.3s; 
+            box-shadow: 0 0 20px var(--accent-glow);
+        }
+        .start-btn:hover { transform: scale(1.05); background: var(--accent); color: white; }
+
         .floaty { position: absolute; font-weight: bold; font-family: var(--font-mono); pointer-events: none; animation: floatUp 2s forwards; z-index: 9999; font-size: 0.9rem; }
         @keyframes floatUp { 0% { opacity: 0; transform: translateY(0); } 100% { opacity: 0; transform: translateY(-50px); } }
-        
-        /* --- VISUAL FX --- */
-        body.low-sanity #app-container { filter: sepia(0.3) contrast(1.1); }
-        body.critical-sanity #app-container { animation: breathe 4s infinite ease-in-out; filter: grayscale(1) blur(0.5px); }
         
         .shake { animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both; }
         @keyframes shake { 10%, 90% { transform: translate3d(-1px, 0, 0); } 20%, 80% { transform: translate3d(2px, 0, 0); } 30%, 50%, 70% { transform: translate3d(-4px, 0, 0); } 40%, 60% { transform: translate3d(4px, 0, 0); } }
 
         @media (max-width: 768px) {
             #app-container { flex-direction: column; height: 100vh; border-radius: 0; border: none; }
-            .sidebar { width: 100%; padding: 20px; border-right: none; border-bottom: 1px solid var(--border); flex-direction: row; flex-wrap: wrap; gap: 15px; max-height: 160px; overflow-y: hidden; }
+            .sidebar { width: 100%; padding: 20px; border-right: none; border-bottom: 1px solid var(--border); flex-direction: row; flex-wrap: wrap; gap: 15px; }
             #story-log { padding: 24px; padding-bottom: 80px; }
+            h1 { font-size: 2.5rem; }
         }
     </style>
 </head>
@@ -171,9 +144,20 @@
     <i data-lucide="arrow-left" style="width: 14px;"></i> Return to Picao
 </a>
 
+<div id="start-screen">
+    <div style="font-family: var(--font-mono); color: var(--accent); margin-bottom: 15px; font-size: 0.75rem; letter-spacing: 2px;">SIMULATION v9.0</div>
+    <h1>Picao<span>AI</span></h1>
+    <p class="subtitle">
+        <b>170+ Paths. Infinite Drama.</b><br>
+        Survive Elo Tusk, Pam Maltman, and your own ego.<br>
+        <i>Warning: Choices have hidden consequences.</i>
+    </p>
+    <button class="start-btn" onclick="startGame()">Initialize Startup</button>
+</div>
+
 <div id="app-container">
     <div class="sidebar">
-        <div class="brand-header">Founder OS v2.0</div>
+        <div class="brand-header">Founder OS</div>
         
         <div class="stat-block">
             <div class="stat-row"><span class="stat-label">Net Worth</span><span class="stat-value" id="ui-networth">$0</span></div>
@@ -181,7 +165,7 @@
         
         <div class="stat-block">
             <div class="stat-row"><span class="stat-label">Liquid Cash</span><span class="stat-value" id="ui-cash">$0</span></div>
-            <div class="stat-row"><span class="stat-label" style="color:var(--danger); font-size:0.65rem;">Burn Rate</span><span class="stat-value" style="color:var(--danger); font-size:0.7rem;" id="ui-burn">-$0/wk</span></div>
+            <div class="stat-row"><span class="stat-label" style="color:var(--danger); font-size:0.65rem;">Est. Burn</span><span class="stat-value" style="color:var(--danger); font-size:0.7rem;" id="ui-burn">-$0/wk</span></div>
         </div>
 
         <div class="stat-block">
@@ -197,10 +181,6 @@
         <div class="stat-block">
             <div class="stat-row"><span class="stat-label">Week</span><span class="stat-value" id="ui-week">1</span></div>
         </div>
-        
-        <div class="stat-block" style="border:none;">
-            <div class="stat-row"><span class="stat-label">Legacy</span><span class="stat-value" id="ui-status" style="color:var(--accent);">UNKNOWN</span></div>
-        </div>
     </div>
 
     <div class="main-view">
@@ -209,9 +189,11 @@
 </div>
 
 <script>
-    // --- 1. INITIALIZATION ---
-    // We run this immediately to ensure no blank screen
-    lucide.createIcons();
+    // --- 1. SETUP ---
+    document.addEventListener('DOMContentLoaded', () => {
+        lucide.createIcons();
+    });
+
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     
     function playSound(type) {
@@ -243,6 +225,7 @@
                 { text: "Launch Memecoin Scam", next: "crypto_scam", effect: { cash: 5000, karma: -20 }, trait: "Grifter" }
             ]
         },
+        
         // --- RELATIONSHIP ARC ---
         partner_ultimatum: {
             title: "THE KITCHEN TABLE",
@@ -260,6 +243,7 @@
                 { text: "Call Elo Tusk for advice", next: "elo_ignore", effect: { sanity: -5 } }
             ]
         },
+
         // --- ELO TUSK ARC ---
         elo_ignore: {
             title: "GHOSTED",
@@ -277,6 +261,7 @@
                 { text: "Apologize", next: "weak_brand", effect: { valuation: -1000000 } }
             ]
         },
+
         // --- MVP SUCCESS ---
         mvp_viral: {
             title: "PRODUCT HUNT #1",
@@ -286,6 +271,7 @@
                 { text: "Charge Users Immediately", next: "bootstrapped_freedom", effect: { cash: 5000 } }
             ]
         },
+
         // --- VC ARC ---
         vc_sharks: {
             title: "SAND HILL ROAD",
@@ -303,6 +289,7 @@
                 { text: "Reject & Go Indie", next: "bootstrapped_freedom", effect: { sanity: 10 } }
             ]
         },
+
         // --- SCALE & SABOTAGE ---
         hyper_growth: {
             title: "SCALING HELL",
@@ -329,6 +316,7 @@
                 { text: "Pull out last minute", next: "end_legend" }
             ]
         },
+
         // --- HARDWARE ARC (Humane Pin) ---
         hardware_pivot: {
             title: "THE PICAO PIN",
@@ -346,6 +334,7 @@
                 { text: "Pivot back to SaaS", next: "mvp_viral" }
             ]
         },
+
         // --- SINGULARITY ARC ---
         safety_research: {
             title: "ALIGNMENT",
@@ -355,6 +344,7 @@
                 { text: "Kill It", next: "end_luddite" }
             ]
         },
+
         // --- FAILURE BRANCHES ---
         burnout_begins: { title: "TIRED", text: "Two jobs is too much. You fell asleep driving.", options: [{text:"Quit Job", next:"partner_ultimatum"}, {text:"Quit Picao", next:"end_early_exit"}] },
         lawsuit_intro: { title: "LAWSUIT", text: "Your ex-employer sues. Assets frozen.", options: [{text:"Settle", next:"debt_slave", effect:{cash:-50000}}, {text:"Fight", next:"end_jail"}] },
@@ -404,10 +394,15 @@
     }
 
     // --- 4. ENGINE LOGIC ---
+    // Start automatically is safest for "no blank screen"
+    // but the start screen will cover it until clicked
     function startGame() {
-        // Immediately Push Story to ensure content exists
-        pushStory('start');
+        document.getElementById('start-screen').style.transform = 'translateY(-100%)';
+        document.getElementById('app-container').style.opacity = '1';
+        document.getElementById('app-container').style.transform = 'scale(1)';
         updateUI();
+        playSound('click');
+        pushStory('start');
     }
 
     function pushStory(nodeKey) {
@@ -450,11 +445,7 @@
                 </button>`;
             }).join('') + `</div>`;
             el.innerHTML = `<div class="node-header"><span>${node.title}</span><div class="node-line"></div></div><div class="node-text"></div>${opts}`;
-            
-            // Auto-scroll
-            requestAnimationFrame(() => {
-                typeWriter(el.querySelector('.node-text'), node.text);
-            });
+            typeWriter(el.querySelector('.node-text'), node.text);
         }
         log.appendChild(el);
         setTimeout(() => log.scrollTo({top:log.scrollHeight, behavior:'smooth'}), 100);
@@ -530,10 +521,6 @@
         else document.body.classList.remove('low-sanity');
         if(state.sanity < 10) document.body.classList.add('critical-sanity');
     }
-
-    // Auto-Start (Removes Blocker)
-    setTimeout(startGame, 100);
-});
 </script>
 </body>
 </html>
