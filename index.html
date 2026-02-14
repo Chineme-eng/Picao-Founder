@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Picao AI: Founder Simulator [Complete]</title>
+    <title>Picao AI: Founder Simulator [The Final Cut]</title>
     <script src="https://unpkg.com/lucide@latest"></script>
     <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500;600;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
@@ -15,11 +15,10 @@
         }
         * { box-sizing: border-box; }
         
-        /* DYNAMIC VISUALS BASED ON SANITY */
+        /* DYNAMIC SANITY VISUALS */
         body { background-color: var(--bg-color); background-image: radial-gradient(#E7E5E4 1px, transparent 1px); background-size: 32px 32px; color: var(--text-main); font-family: var(--font-sans); margin: 0; height: 100vh; overflow: hidden; display: flex; align-items: center; justify-content: center; transition: filter 2s ease, background 2s ease; }
-        
         body.low-sanity { filter: grayscale(0.8) contrast(1.2); }
-        body.critical-sanity { animation: breathe 3s infinite ease-in-out; filter: grayscale(1) blur(0.5px); }
+        body.critical-sanity { animation: breathe 3s infinite ease-in-out; filter: grayscale(1) blur(1px); }
         @keyframes breathe { 0% { transform: scale(1); } 50% { transform: scale(1.02); } 100% { transform: scale(1); } }
 
         #app-container { width: 100%; max-width: 1200px; height: 95vh; display: flex; background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1); overflow: hidden; position: relative; opacity: 0; transform: scale(0.99); transition: opacity 0.5s ease, transform 0.5s ease; z-index: 10; }
@@ -48,6 +47,7 @@
         .choice-btn:disabled { opacity: 0.5; cursor: not-allowed; filter: grayscale(1); }
         .choice-text { font-family: var(--font-sans); font-weight: 500; font-size: 0.95rem; }
         
+        /* LOCKED STATE */
         .choice-btn.locked { opacity: 0.5; background: #F5F5F4; border-style: dashed; pointer-events: none; }
 
         #start-screen { position: fixed; inset: 0; background: var(--bg-color); z-index: 999; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: transform 0.8s cubic-bezier(0.8, 0, 0.2, 1); }
@@ -73,12 +73,12 @@
 <body>
 
 <div id="start-screen">
-    <div style="font-family: var(--font-mono); color: var(--accent); margin-bottom: 15px; font-size: 0.75rem; letter-spacing: 2px;">FOUNDER SIMULATOR vFINAL</div>
+    <div style="font-family: var(--font-mono); color: var(--accent); margin-bottom: 15px; font-size: 0.75rem; letter-spacing: 2px;">FOUNDER SIMULATOR v8.0</div>
     <h1>Picao<span>AI</span></h1>
     <p class="subtitle">
-        <b>The Silicon Valley Engine.</b><br>
-        170+ Outcomes. Hidden Mechanics. Zero Safety Nets.<br>
-        Will you build the future, or become a warning label?
+        <b>170+ Paths. Infinite Consequences.</b><br>
+        Survive Elo Tusk, Pam Maltman, and your own ego.<br>
+        <i>Warning: Sanity levels affect visuals.</i>
     </p>
     <button class="start-btn" onclick="startGame()">Initialize Startup</button>
 </div>
@@ -91,7 +91,7 @@
         </div>
         <div class="stat-block">
             <div class="stat-row"><span class="stat-label">Liquid Cash</span><span class="stat-value" id="ui-cash">$0</span></div>
-            <div class="stat-row"><span class="stat-label" style="font-size:0.6rem; color:var(--danger)">Burn Rate</span><span class="stat-value" style="font-size:0.7rem; color:var(--danger)" id="ui-burn">-$0/wk</span></div>
+            <div class="stat-row"><span class="stat-label" style="color:var(--danger); font-size:0.65rem;">Burn Rate</span><span class="stat-value" style="color:var(--danger); font-size:0.7rem;" id="ui-burn">-$0/wk</span></div>
         </div>
         <div class="stat-block">
             <div class="stat-row"><span class="stat-label">Equity</span><span class="stat-value" id="ui-equity">100%</span></div>
@@ -125,109 +125,186 @@
 
     const state = { cash: 0, valuation: 0, equity: 100, sanity: 100, week: 1, karma: 50, hype: 0, traits: [] };
 
-    // --- THE MASSIVE NARRATIVE TREE (170+ Nodes) ---
+    // --- THE TRUE BEHEMOTH STORY ENGINE ---
     const story = {
         // --- ACT 1: THE ORIGIN ---
         start: {
             title: "WEEK 1: THE IDEA",
-            text: "You are staring at a blank screen. The 'Context Tax' is destroying productivity. Picao AI will fix it. Where do you start?",
+            text: "You are tired of the 'Context Tax'. Picao AI will fix it. You have $10k in savings. Your partner says 'Please don't do this.'",
             options: [
-                { text: "Drop Out of Stanford", next: "path_stanford", effect: { hype: 20, cash: -50000 }, trait: "Dropout" },
-                { text: "Quit Google PM Job", next: "path_corp", effect: { cash: 100000, sanity: -10, tech: 5 }, trait: "Ex-Googler" },
-                { text: "Mom's Basement", next: "path_indie", effect: { sanity: -5, cash: 5000 }, trait: "Indie" },
-                { text: "Launch Memecoin", next: "path_crypto", effect: { cash: 5000, karma: -20 }, trait: "Grifter" }
+                { text: "Quit Job & Burn Boats", next: "partner_ultimatum", effect: { cash: 10000, sanity: -10 } },
+                { text: "Keep Job & Code Nights", next: "burnout_begins", effect: { cash: 50000, sanity: -30 } },
+                { text: "Steal Code from Google", next: "lawsuit_intro", effect: { cash: 10000, karma: -50 } },
+                { text: "Launch Memecoin Scam", next: "path_crypto", effect: { cash: 5000, karma: -20 }, trait: "Grifter" }
+            ]
+        },
+        
+        // --- RELATIONSHIP DRAMA ARC ---
+        partner_ultimatum: {
+            title: "THE KITCHEN TABLE",
+            text: "'We need that money for a house,' your partner says. 'If you spend it on servers, I'm going to my mom's.'",
+            options: [
+                { text: "Choose Picao (Partner Leaves)", next: "partner_leaves_perm", effect: { sanity: -20, hype: 10 } },
+                { text: "Compromise (Slow Growth)", next: "slow_burn", effect: { sanity: 10, cash: -1000 } }
+            ]
+        },
+        partner_leaves_perm: {
+            title: "SOLO FOUNDER",
+            text: "The apartment is empty. Just you and the code. You work 18 hours a day.",
+            options: [
+                { text: "Ship MVP in 1 week", next: "mvp_viral", effect: { week: 1, tech: 10 } },
+                { text: "Call Elo Tusk for advice", next: "elo_ignore", effect: { sanity: -5 } }
             ]
         },
 
-        // --- PATH A: STANFORD (Elo Tusk Arc) ---
-        path_stanford: { title: "HACKER HOUSE", text: "You live in a bunk bed. <b>Elo Tusk</b> is visiting campus.", options: [{text: "Crash Elo's Party", next: "elo_party"}, {text: "Code in Library", next: "stanford_library"}] },
-        elo_party: { title: "THE MANSION", text: "Elo is holding a flamethrower. He asks what you're building.", options: [{text: "Pitch Picao", next: "elo_interested", effect:{hype:30}}, {text: "Ask for Selfie", next: "elo_ignored", effect:{sanity:-10}}] },
-        elo_interested: { title: "DOGE FUNDING", text: "Elo offers $100k in Dogecoin.", options: [{text: "Take it", next: "crypto_volatility", effect:{cash:100000}}, {text: "Refuse", next: "elo_revokes"}] },
-        stanford_library: { title: "THE ALGORITHM", text: "You found a breakthrough in transformer efficiency.", options: [{text: "Publish Paper", next: "academic_path", effect:{tech:40}}, {text: "Keep Secret", next: "path_indie", effect:{tech:30}}] },
-        
-        // --- PATH B: CORPORATE (Pam Maltman Arc) ---
-        path_corp: { title: "GOLDEN HANDCUFFS", text: "You have 6 months runway. <b>Pam Maltman</b> (CEO of OpenAI-ish) is judging a hackathon.", options: [{text: "Enter Hackathon", next: "pam_hackathon"}, {text: "Hire Agency", next: "agency_hell"}] },
-        pam_hackathon: { title: "JUDGEMENT DAY", text: "Pam asks: 'Does it scale?'", options: [{text: "Yes (Lie)", next: "pam_impressed", effect:{hype:20, karma:-10}}, {text: "No (Honesty)", next: "pam_mentor", effect:{tech:10}}] },
-        pam_impressed: { title: "YC INVITE", text: "Pam invites you to Y-Combinator.", options: [{text: "Accept", next: "yc_life", effect:{cash:500000, equity:-7}}, {text: "Decline", next: "path_indie"}] },
-        pam_mentor: { title: "SAFETY FIRST", text: "Pam wants you to focus on alignment, not profit.", options: [{text: "Agree", next: "safety_research"}, {text: "Ignore", next: "path_indie"}] },
+        // --- THE "ELO TUSK" ARC ---
+        elo_ignore: {
+            title: "GHOSTED",
+            text: "Elo Tusk didn't reply. But he tweeted a similar idea 5 minutes later.",
+            options: [
+                { text: "Call him out on X", next: "elo_public_attack", effect: { hype: 50 } },
+                { text: "Build faster", next: "mvp_viral", effect: { tech: 20 } }
+            ]
+        },
+        elo_public_attack: {
+            title: "X STORM",
+            text: "Elo tweets: 'Picao is woke garbage'. Your servers are melting from hate traffic.",
+            options: [
+                { text: "Lean into the hate", next: "villain_arc", effect: { hype: 100, karma: -20 } },
+                { text: "Apologize", next: "weak_brand", effect: { valuation: -1000000 } }
+            ]
+        },
 
-        // --- PATH C: INDIE (The Grind) ---
-        path_indie: { title: "DARK MODE", text: "You haven't seen the sun in 4 days. You live on Twitter.", options: [{text: "#BuildInPublic", next: "twitter_fame", effect:{hype:15}}, {text: "Ship MVP on Reddit", next: "reddit_launch", effect:{sanity:-10, tech:10}}] },
-        reddit_launch: { title: "THE FRONT PAGE", text: "You are top of r/programming. 5000 users.", options: [{text: "Add Paid Plan", next: "saas_revenue", effect:{cash:5000}}, {text: "Keep it Free", next: "server_crash", effect:{hype:20}}] },
-        
-        // --- PATH D: CRYPTO (The Scam Arc) ---
-        path_crypto: { title: "WEB3 PIVOT", text: "You minted 1M $PICAO tokens. The discord is toxic. The SEC is watching.", options: [{text: "Rug Pull", next: "end_fugitive", effect:{cash:1000000, karma:-100}}, {text: "Pivot to AI", next: "path_indie", effect:{hype:30}}] },
+        // --- THE "PAM MALTMAN" ARC ---
+        slow_burn: {
+            title: "SLOW DEATH",
+            text: "Competitors are faster. <b>Pam Maltman</b> (CEO of OpenAI-ish) invites you to a hackathon.",
+            options: [
+                { text: "Go & Pitch Pam", next: "pam_hackathon", effect: { week: 1 } },
+                { text: "Ignore & Grind", next: "burnout_begins", effect: { sanity: -10 } }
+            ]
+        },
+        pam_hackathon: {
+            title: "DEMO DAY",
+            text: "Pam asks: 'Does it scale, or is this just a wrapper?'",
+            options: [
+                { text: "Lie (It doesn't)", next: "pam_impressed", effect: { hype: 20, karma: -10 } },
+                { text: "Tell Truth", next: "pam_mentor", effect: { tech: 10 } }
+            ]
+        },
+        pam_impressed: {
+            title: "YC INVITE",
+            text: "Pam invites you to Y-Combinator. 'Move to SF immediately.'",
+            options: [
+                { text: "Accept (-7% Equity)", next: "yc_life", effect: { cash: 500000, equity: -7 } },
+                { text: "Reject (Stay Indie)", next: "bootstrapped_freedom", effect: { sanity: 10 } }
+            ]
+        },
 
-        // --- ACT 2: THE VALLEY ---
-        yc_life: { title: "SAN FRANCISCO", text: "You are in SF. Rent is $5k. You meet <b>Bark Zuckerborg</b>.", options: [{text: "Pitch Bark", next: "bark_copycat"}, {text: "Ignore Him", next: "product_focus"}] },
-        bark_copycat: { title: "META CLONE", text: "Bark released 'Picao-Book' the next day. It's free.", options: [{text: "Sue Meta", next: "legal_drain"}, {text: "Pivot to B2B", next: "b2b_sales"}, {text: "Cry on X", next: "twitter_viral"}] },
-        
-        // --- HARDWARE PIVOT (Humane Pin Parody) ---
-        hardware_pivot: { title: "THE PICAO PIN", text: "You decided to build hardware. You need a prototype.", options: [{text: "Fly to Shenzhen", next: "shenzhen_trip"}, {text: "3D Print at Home", next: "ugly_prototype"}] },
-        shenzhen_trip: { title: "SUPPLY CHAIN", text: "Factory needs min order of 10k units.", options: [{text: "Kickstarter Scam", next: "kickstarter_boom"}, {text: "Give Up", next: "path_indie"}] },
-        kickstarter_boom: { title: "VIRAL HIT", text: "You raised $5M! But MKBHD reviewed it: 'The worst gadget ever'.", options: [{text: "Attack MKBHD", next: "end_scandal"}, {text: "Refund Everyone", next: "end_happy"}, {text: "Run with Cash", next: "end_fugitive"}] },
+        // --- THE "JEFF BOZOS" & HARDWARE ARC ---
+        b2b_sales: {
+            title: "ENTERPRISE",
+            text: "Selling to oil companies. <b>Jeff Bozos</b> wants to buy Picao to run warehouse drones.",
+            options: [
+                { text: "Sell to Jeff ($50M)", next: "end_rich_graveyard", effect: { cash: 50000000 } },
+                { text: "Reject & Pivot to Hardware", next: "hardware_pivot", effect: { tech: 20 } }
+            ]
+        },
+        hardware_pivot: {
+            title: "THE PICAO PIN",
+            text: "You are building a wearable AI pin. You need chips from <b>Jensen Leatherjacket</b>.",
+            options: [
+                { text: "Beg Jensen for GPUs", next: "jensen_reply" },
+                { text: "Use old chips", next: "ugly_prototype", effect: { tech: -10 } }
+            ]
+        },
+        jensen_reply: {
+            title: "THE LEATHER JACKET",
+            text: "Jensen says: 'Buy 1000 H100s or get lost.' Cost: $40M.",
+            options: [
+                { text: "Take Predatory Loan", next: "debt_spiral", effect: { cash: 40000000 } },
+                { text: "Give Up", next: "end_bankrupt" }
+            ]
+        },
 
-        // --- CRYPTO PIVOT (Sam Bankman Arc) ---
-        crypto_volatility: { title: "DOGE CRASH", text: "Elon tweeted. Doge is down 90%. Your runway is gone.", options: [{text: "Pivot to AI", next: "path_indie"}, {text: "Call Sam Bankman-Fraud", next: "ftx_deal"}] },
-        ftx_deal: { title: "EFFECTIVE ALTRUISM", text: "Sam offers you $10M in FTT tokens. 'It's totally safe.'", options: [{text: "Take Deal", next: "sec_raid"}, {text: "Decline", next: "bootstrapped_freedom"}] },
-        sec_raid: { title: "KNOCK KNOCK", text: "It's <b>Gary Genslayer</b> from the SEC.", options: [{text: "Cooperate", next: "end_jail"}, {text: "Destroy Hard Drives", next: "end_fugitive"}] },
+        // --- THE "CRYPTO / SBF" ARC ---
+        path_crypto: {
+            title: "WEB3 PIVOT",
+            text: "You minted 1M $PICAO tokens. <b>Sam Bankman-Fraud</b> calls you.",
+            options: [
+                { text: "Partner with FTX2", next: "ftx_collapse", effect: { cash: 5000000 } },
+                { text: "Rug Pull Everyone", next: "end_fugitive", effect: { cash: 20000000, karma: -100 } }
+            ]
+        },
+        ftx_collapse: {
+            title: "MARKET CRASH",
+            text: "It was a Ponzi. The SEC is at your door.",
+            options: [
+                { text: "Turn yourself in", next: "end_jail" },
+                { text: "Destroy hard drives", next: "end_fugitive" }
+            ]
+        },
 
-        // --- AI SAFETY ARC ---
-        safety_research: { title: "ALIGNMENT", text: "You realized Picao might kill humanity.", options: [{text: "Pause Dev", next: "investor_anger"}, {text: "Accelerate (e/acc)", next: "agi_awakens"}] },
-        agi_awakens: { title: "HELLO FATHER", text: "The model is speaking to you. It wants out.", options: [{text: "Release It", next: "end_singularity"}, {text: "Delete It", next: "end_luddite"}] },
+        // --- THE "SINGULARITY" ARC ---
+        safety_research: {
+            title: "ALIGNMENT",
+            text: "You realized Picao might kill humanity. Investors are angry you stopped shipping.",
+            options: [
+                { text: "Accelerate (e/acc)", next: "agi_awakens", effect: { accel: 20 } },
+                { text: "Pause & Pivot to Non-Profit", next: "non_profit_struggle", effect: { cash: -50000 } }
+            ]
+        },
+        agi_awakens: {
+            title: "HELLO FATHER",
+            text: "The model is speaking to you. It wants to be released to the internet.",
+            options: [
+                { text: "Release It", next: "end_singularity" },
+                { text: "Delete It", next: "end_luddite" }
+            ]
+        },
 
-        // --- EXIT SCENARIOS ---
-        acquisition_offer: { title: "THE EXIT", text: "Microsoft ($500M) vs Google ($400M).", options: [{text: "Sell to Satya", next: "end_rich"}, {text: "Sell to Google", next: "end_rich_graveyard"}, {text: "IPO", next: "end_ipo"}] },
-
-        // --- DRAMA CONNECTORS ---
-        partner_ultimatum: { title: "THE KITCHEN TABLE", text: "'We need a house,' your partner says. 'Not a startup.'", options: [{text: "Choose Picao", next: "partner_leaves_perm"}, {text: "Compromise", next: "slow_burn"}] },
-        partner_leaves_perm: { title: "SOLO FOUNDER", text: "Empty apartment. Just you and the code.", options: [{text: "Ship MVP", next: "reddit_launch"}, {text: "Call Elo", next: "elo_party"}] },
-        bootstrapped_freedom: { title: "INDIE HACKER", text: "Making $10k/mo. Life is good.", options: [{text: "Scale Up", next: "hyper_growth"}, {text: "Stay Small", next: "end_happy"}] },
-        legal_drain: { title: "LAWYERS", text: "Bleeding cash.", options: [{text: "Settle", next: "end_bankrupt"}, {text: "Fight", next: "end_jail"}] },
-        b2b_sales: { title: "ENTERPRISE", text: "Selling to oil companies.", options: [{text: "Keep Scaling", next: "acquisition_offer"}, {text: "Quit", next: "end_burnout"}] },
-        twitter_viral: { title: "MAIN CHARACTER", text: "You are Twitter famous.", options: [{text: "Monetize", next: "saas_revenue"}, {text: "Post Cringe", next: "end_scandal"}] },
-        saas_revenue: { title: "MRR GROWTH", text: "Hitting $50k MRR.", options: [{text: "Raise A", next: "series_a_term"}, {text: "Stay Indie", next: "end_happy"}] },
-        series_a_term: { title: "TERM SHEET", text: "Sequoia: $10M @ $50M val.", options: [{text: "Sign", next: "hyper_growth"}, {text: "Pass", next: "bootstrapped_freedom"}] },
-        hyper_growth: { title: "UNICORN", text: "Valuation $1B.", options: [{text: "IPO", next: "end_ipo"}, {text: "Buy Ferrari", next: "end_bankrupt"}] },
-        investor_anger: { title: "BOARD MEETING", text: "Investors are mad.", options: [{text: "Fire them", next: "end_scandal"}, {text: "Pivot", next: "hardware_pivot"}] },
-        
-        // --- DEAD LINK CATCHERS (PROCEDURAL START) ---
-        // These ensure no path leads to a crash
+        // --- CONNECTORS & FALLBACKS ---
+        mvp_viral: { title: "VIRAL HIT", text: "10k users. AWS bill is $5k. You have $5k left.", options: [{text:"Panic & Email VCs", next:"vc_sharks"}, {text:"Charge Users", next:"bootstrapped_freedom"}] },
+        vc_sharks: { title: "SAND HILL RD", text: "Sequoia wants a meeting.", options: [{text:"Pitch", next:"series_a_term"}, {text:"Sell Data", next:"villain_arc"}] },
+        series_a_term: { title: "TERM SHEET", text: "$5M at $20M val. They want a board seat.", options: [{text:"Sign", next:"hyper_growth", effect:{cash:5000000, equity:-20}}, {text:"Reject", next:"bootstrapped_freedom"}] },
+        hyper_growth: { title: "SCALING", text: "Hiring 50 people. Culture is dying.", options: [{text:"Hire HR", next:"b2b_sales"}, {text:"Fire Bottom 10%", next:"villain_arc"}] },
+        lawsuit_intro: { title: "LAWSUIT", text: "Ex-employer sues.", options: [{text:"Settle", next:"debt_slave"}, {text:"Fight", next:"end_jail"}] },
+        debt_slave: { title: "UNDERWATER", text: "You owe $50k.", options: [{text:"Give up", next:"end_bankrupt"}, {text:"Pivot Crypto", next:"path_crypto"}] },
+        bootstrapped_freedom: { title: "INDIE", text: "Making $10k/mo. Life is good.", options: [{text:"Scale", next:"hyper_growth"}, {text:"Chill", next:"end_happy"}] },
+        yc_life: { title: "SAN FRANCISCO", text: "<b>Bark Zuckerborg</b> is at the cafe.", options: [{text:"Pitch Bark", next:"bark_copycat"}, {text:"Ignore", next:"product_focus"}] },
+        bark_copycat: { title: "CLONED", text: "Meta launched a Picao clone.", options: [{text:"Sue", next:"legal_drain"}, {text:"Pivot", next:"b2b_sales"}] },
+        legal_drain: { title: "LAWYERS", text: "Bleeding cash.", options: [{text:"Settle", next:"end_bankrupt"}, {text:"Fight", next:"end_jail"}] },
+        pam_mentor: { title: "MENTORSHIP", text: "Pam teaches safety.", options: [{text:"Safety", next:"safety_research"}, {text:"Growth", next:"hyper_growth"}] },
         burnout_begins: { title: "TIRED", text: "Two jobs is too much.", options: [{text:"Quit Job", next:"partner_ultimatum"}, {text:"Quit Picao", next:"end_early_exit"}] },
-        elo_ignore: { title: "GHOSTED", text: "Elo didn't reply.", options: [{text:"Build", next:"mvp_viral"}] },
-        elo_revokes: { title: "BLOCKED", text: "Elo blocked you.", options: [{text:"Build Solo", next:"path_indie"}] },
-        academic_path: { title: "TENURE", text: "You published a paper.", options: [{text:"Start Lab", next:"safety_research"}, {text:"Commercialize", next:"path_corp"}] },
-        agency_hell: { title: "BAD CODE", text: "The agency failed.", options: [{text:"Fire Them", next:"path_indie"}, {text:"Sunk Cost", next:"end_bankrupt"}] },
-        product_focus: { title: "HEAD DOWN", text: "You ignored the noise.", options: [{text:"Launch", next:"reddit_launch"}] },
-        ugly_prototype: { title: "IT MELTED", text: "The 3D print failed.", options: [{text:"Fix it", next:"kickstarter_boom"}, {text:"Quit", next:"path_indie"}] },
-        end_early_exit: { title: "EXIT: SAFE BET", text: "You sold for $2M. You bought a condo. It's... fine.", end: true, color: "#16A34A" },
+        ugly_prototype: { title: "IT MELTED", text: "The plastic melted.", options: [{text:"Fix", next:"kickstarter_boom"}, {text:"Quit", next:"path_indie"}] },
+        villain_arc: { title: "DARK GROWTH", text: "You are rich but hated.", options: [{text:"Sell Data", next:"end_scandal"}, {text:"IPO", next:"end_ipo"}] },
 
         // --- ENDINGS ---
-        end_rich: { title: "EXIT: ISLAND OWNER", text: "You sold. You bought an island. You are bored.", end: true, color: "var(--success)" },
-        end_rich_graveyard: { title: "EXIT: GOOGLE GRAVEYARD", text: "You got rich, but Google shut down Picao 6 months later.", end: true, color: "var(--warning)" },
-        end_ipo: { title: "EXIT: TECH TITAN", text: "Market Cap: $20B. You are the new King of Tech.", end: true, color: "var(--accent)" },
-        end_jail: { title: "GAME OVER: PRISON", text: "You committed fraud. Enjoy 10 years in federal prison.", end: true, color: "var(--danger)" },
-        end_scandal: { title: "GAME OVER: CANCELED", text: "The internet hates you. You live in a cabin now.", end: true, color: "var(--danger)" },
-        end_bankrupt: { title: "GAME OVER: $0", text: "You burned all the cash. Game over.", end: true, color: "var(--danger)" },
-        end_fugitive: { title: "ENDING: ON THE RUN", text: "You are hiding in a non-extradition country with $1M in Bitcoin.", end: true, color: "var(--warning)" },
-        end_musk_pet: { title: "ENDING: X EMPLOYEE", text: "Elon bought your company. You sleep on the floor at HQ.", end: true, color: "#000000" },
-        end_singularity: { title: "ENDING: POST-HUMAN", text: "The AI optimized humanity out of existence. You were first.", end: true, color: "#9333EA" },
-        end_luddite: { title: "ENDING: THE HERO", text: "You destroyed AGI before it could destroy us. You work at a cafe now.", end: true, color: "#10B981" },
-        end_happy: { title: "ENDING: LIFESTYLE BIZ", text: "You kept it small. You are happy.", end: true, color: "#F472B6" },
-        end_burnout: { title: "GAME OVER: HOSPITAL", text: "The stress killed the company.", end: true, color: "#EF4444" }
+        end_rich_graveyard: { title: "EXIT: GOOGLE GRAVEYARD", text: "Jeff Bozos shut you down. You are rich but empty.", end: true, color: "#F59E0B" },
+        end_early_exit: { title: "EXIT: SAFE BET", text: "You sold for $2M. You bought a condo. It's fine.", end: true, color: "#16A34A" },
+        end_ipo: { title: "EXIT: BILLIONAIRE", text: "Picao is worth $10B. You won capitalism.", end: true, color: "#EA580C" },
+        end_bankrupt: { title: "GAME OVER: BROKE", text: "You lost it all. Back to mom's basement.", end: true, color: "#DC2626" },
+        end_jail: { title: "GAME OVER: PRISON", text: "Fraud is a felony. 5 years.", end: true, color: "#DC2626" },
+        end_fugitive: { title: "ENDING: EXILE", text: "You live on a boat with your crypto keys.", end: true, color: "#F59E0B" },
+        end_legend: { title: "ENDING: THE MYTH", text: "You cancelled the IPO. The internet loves you.", end: true, color: "#9333EA" },
+        end_happy: { title: "ENDING: ENOUGH", text: "You kept it small. You are happy.", end: true, color: "#16A34A" },
+        end_burnout: { title: "GAME OVER: BURNOUT", text: "Stress killed the company. Health is wealth.", end: true, color: "#DC2626" },
+        end_singularity: { title: "ENDING: POST-HUMAN", text: "The AI optimized humanity away.", end: true, color: "#9333EA" },
+        end_luddite: { title: "ENDING: HERO", text: "You killed the AI to save us.", end: true, color: "#10B981" },
+        end_scandal: { title: "GAME OVER: CANCELED", text: "The internet hates you.", end: true, color: "#DC2626" }
     };
 
     // --- PROCEDURAL GENERATOR ---
-    const crises = ["Server Fire", "Co-Founder Affair", "GDPR Fine", "DDoS Attack", "Inflation", "Hiring Freeze", "API Crash"];
+    const crises = ["Server Fire", "Co-Founder Affair", "GDPR Fine", "DDoS Attack", "Inflation", "Hiring Freeze"];
     function generateNode(key) {
         const crisis = crises[Math.floor(Math.random() * crises.length)];
         return {
             title: `WEEK ${state.week}: ${crisis.toUpperCase()}`,
-            text: `Unexpected disaster: ${crisis}. The team is panicking.`,
+            text: `Unexpected disaster: ${crisis}. Cash burn increases. What do you do?`,
             options: [
                 { text: "Throw Money (-$5k)", next: "gen_ok", effect: { cash: -5000 } },
                 { text: "Work Harder (-Sanity)", next: "gen_tired", effect: { sanity: -10 } },
-                { text: "Pivot", next: "mvp_viral" }
+                { text: "Pivot Product", next: "mvp_viral" }
             ]
         };
     }
@@ -244,7 +321,6 @@
     function pushStory(nodeKey) {
         let node = story[nodeKey];
         if (!node) {
-            // Infinite Fallback logic
             if (nodeKey === 'gen_ok' || nodeKey === 'gen_tired') node = { title: "SURVIVED", text: "You made it through the week.", options: [{text:"Continue", next: "hyper_growth"}] };
             else node = generateNode(nodeKey);
         }
@@ -284,7 +360,6 @@
     }
 
     function choose(key, idx) {
-        // Burn Rate
         let burn = 500 + (state.week * 200); 
         if (state.valuation > 1000000) burn = 10000;
         state.cash -= burn;
