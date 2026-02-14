@@ -3,49 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Picao AI: Founder Simulator [Mega-Infinite Edition]</title>
+    <title>Picao AI: Founder Simulator [v2.0]</title>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500;600;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
-        /* --- CORE THEME VARIABLES --- */
+        /* --- CORE THEME VARIABLES (MATCHING LANDING PAGE) --- */
         :root {
-            /* DARK MODE (Default) */
-            --bg-color: #050505;
-            --card-bg: #0e0e11;
-            --sidebar-bg: #09090b;
-            --text-main: #ededed;
-            --text-muted: #a1a1aa;
-            --border: #27272a;
-            --accent: #a855f7; /* Picao Purple */
-            --accent-dim: rgba(168, 85, 247, 0.1);
-            --accent-glow: rgba(168, 85, 247, 0.5);
-            --danger: #ef4444;
-            --success: #10b981;
-            --warning: #f59e0b;
-            --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
-            --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
-        }
-
-        [data-theme="light"] {
-            --bg-color: #f0f4f8;
-            --card-bg: #ffffff;
-            --sidebar-bg: #f8fafc;
-            --text-main: #0f172a;
-            --text-muted: #64748b;
-            --border: #e2e8f0;
-            --accent: #7c3aed;
-            --accent-dim: rgba(124, 58, 237, 0.1);
-            --accent-glow: rgba(124, 58, 237, 0.3);
+            --bg-color: #FDFBF7;
+            --card-bg: #FFFFFF;
+            --sidebar-bg: #F8FAFC;
+            --text-main: #0F172A;
+            --text-muted: #64748B;
+            --border: #E2E8F0;
+            --accent: #4F46E5; /* Picao Indigo */
+            --accent-hover: #4338ca;
+            --accent-dim: rgba(79, 70, 229, 0.05);
+            --danger: #EF4444;
+            --success: #10B981;
+            --font-serif: 'Lora', serif;
+            --font-sans: 'Inter', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+            --shadow-soft: 0 4px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px -1px rgba(0, 0, 0, 0.02);
+            --shadow-float: 0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 10px 10px -5px rgba(0, 0, 0, 0.01);
         }
 
         * { box-sizing: border-box; }
 
         body {
             background-color: var(--bg-color);
-            background-image: 
-                radial-gradient(circle at 50% 0%, var(--accent-dim) 0%, transparent 40%),
-                linear-gradient(var(--border) 1px, transparent 1px),
-                linear-gradient(90deg, var(--border) 1px, transparent 1px);
-            background-size: 100% 100%, 40px 40px, 40px 40px;
-            background-attachment: fixed;
+            background-image: radial-gradient(#E2E8F0 1px, transparent 1px);
+            background-size: 40px 40px;
             color: var(--text-main);
             font-family: var(--font-sans);
             margin: 0;
@@ -55,115 +42,112 @@
             align-items: center;
             justify-content: center;
         }
-/* --- RETURN BUTTON --- */
-.back-home {
-    position: fixed;
-    top: 20px;
-    left: 20px;
-    z-index: 2000; /* Sit above everything, even the start screen */
-    background: rgba(0, 0, 0, 0.6);
-    border: 1px solid var(--border);
-    color: var(--text-muted);
-    padding: 10px 20px;
-    border-radius: 30px;
-    text-decoration: none;
-    font-size: 0.75rem;
-    font-family: var(--font-mono);
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    backdrop-filter: blur(10px);
-    transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    cursor: pointer;
-}
 
-.back-home:hover {
-    background: var(--accent-dim);
-    border-color: var(--accent);
-    color: var(--accent);
-    transform: translateX(-3px);
-    box-shadow: 0 0 15px var(--accent-glow);
-}
+        /* --- RETURN BUTTON --- */
+        .back-home {
+            position: fixed;
+            top: 24px;
+            left: 24px;
+            z-index: 2000;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            padding: 10px 20px;
+            border-radius: 99px;
+            text-decoration: none;
+            font-size: 0.8rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: var(--shadow-soft);
+        }
 
-/* Mobile Adjustment */
-@media (max-width: 768px) {
-    .back-home {
-        top: 15px;
-        left: 15px;
-        padding: 8px 14px;
-        font-size: 0.65rem;
-    }
-}
+        .back-home:hover {
+            color: var(--accent);
+            border-color: var(--accent);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-float);
+        }
+
         /* --- UI CONTAINER --- */
         #app-container {
             width: 100%;
-            max-width: 1100px;
-            height: 95vh;
+            max-width: 1200px;
+            height: 90vh;
             display: flex;
             background: var(--card-bg);
             border: 1px solid var(--border);
-            border-radius: 16px;
-            box-shadow: 0 50px 100px -20px rgba(0, 0, 0, 0.7);
+            border-radius: 24px;
+            box-shadow: var(--shadow-float);
             overflow: hidden;
             position: relative;
             opacity: 0;
             transform: scale(0.98);
-            transition: opacity 0.5s ease, transform 0.5s ease;
+            transition: opacity 0.6s ease, transform 0.6s ease;
             z-index: 10;
         }
 
         /* --- LEFT SIDEBAR --- */
         .sidebar {
-            width: 300px;
+            width: 280px;
             background: var(--sidebar-bg);
             border-right: 1px solid var(--border);
-            padding: 25px;
+            padding: 32px;
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: 24px;
             flex-shrink: 0;
-            overflow-y: auto;
         }
 
         .brand-header {
-            font-family: var(--font-mono);
+            font-family: var(--font-serif);
             font-weight: 700;
-            font-size: 1rem;
-            color: var(--accent);
-            letter-spacing: -0.5px;
+            font-size: 1.25rem;
+            color: var(--text-main);
             display: flex;
             align-items: center;
             gap: 10px;
-            margin-bottom: 10px;
+            margin-bottom: 20px;
         }
-        .brand-dot { width: 10px; height: 10px; background: var(--accent); border-radius: 50%; box-shadow: 0 0 15px var(--accent); animation: pulse 2s infinite; }
-        @keyframes pulse { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
+        .brand-logo {
+            width: 28px;
+            height: 28px;
+            background: var(--accent);
+            border-radius: 6px;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: bold;
+            font-style: italic;
+        }
 
-        .stat-group { display: flex; flex-direction: column; gap: 6px; }
-        .stat-label { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; font-weight: 700; }
-        .stat-value { font-family: var(--font-mono); font-size: 1.2rem; font-weight: 600; color: var(--text-main); }
+        .stat-group { display: flex; flex-direction: column; gap: 8px; }
+        .stat-label { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; font-weight: 600; }
+        .stat-value { font-family: var(--font-mono); font-size: 1.1rem; font-weight: 600; color: var(--text-main); }
         .stat-value.highlight { color: var(--success); }
         .stat-value.danger { color: var(--danger); }
 
-        .bar-wrap { height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; margin-top: 5px; }
-        .bar-fill { height: 100%; transition: width 0.5s ease; }
+        .bar-wrap { height: 6px; background: var(--border); border-radius: 99px; overflow: hidden; margin-top: 4px; }
+        .bar-fill { height: 100%; transition: width 0.5s ease; border-radius: 99px; }
 
         .status-badge {
-            font-size: 0.75rem; padding: 6px 10px; border-radius: 6px;
-            background: var(--border); color: var(--text-muted);
+            font-size: 0.7rem; padding: 6px 12px; border-radius: 99px;
+            background: var(--accent-dim); color: var(--accent);
             text-align: center; font-weight: 600;
-            border: 1px solid transparent;
+            border: 1px solid rgba(79, 70, 229, 0.1);
+            align-self: flex-start;
         }
-        .status-badge.active { background: var(--accent-dim); color: var(--accent); border-color: var(--accent); }
 
         .trait-list { display: flex; flex-wrap: wrap; gap: 6px; margin-top: auto; }
         .trait-badge { 
             font-size: 0.65rem; padding: 4px 8px; border-radius: 4px; 
-            background: rgba(255,255,255,0.05); color: var(--text-muted); 
+            background: white; color: var(--text-muted); 
             border: 1px solid var(--border);
+            font-weight: 500;
         }
 
         /* --- MAIN CONTENT --- */
@@ -172,75 +156,66 @@
             display: flex;
             flex-direction: column;
             position: relative;
+            background: white;
         }
-
-        .theme-toggle {
-            position: absolute; top: 20px; right: 20px;
-            background: transparent; border: 1px solid var(--border);
-            color: var(--text-muted); padding: 8px; border-radius: 8px;
-            cursor: pointer; transition: 0.2s; z-index: 20;
-        }
-        .theme-toggle:hover { color: var(--text-main); border-color: var(--text-main); }
 
         #story-log {
             flex-grow: 1;
-            padding: 40px;
-            padding-bottom: 100px;
+            padding: 60px;
+            padding-bottom: 120px;
             overflow-y: auto;
             scroll-behavior: smooth;
             display: flex;
             flex-direction: column;
-            gap: 40px;
+            gap: 48px;
         }
 
         /* --- STORY NODES --- */
         .story-node {
-            animation: slideIn 0.5s ease forwards;
-            max-width: 700px;
+            animation: slideIn 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+            max-width: 680px;
             margin: 0 auto;
             width: 100%;
         }
-        @keyframes slideIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideIn { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
 
         .node-header { 
-            font-family: var(--font-mono); color: var(--accent); font-size: 0.75rem; margin-bottom: 15px; opacity: 0.8;
-            display: flex; align-items: center; gap: 15px;
+            font-family: var(--font-mono); color: var(--accent); font-size: 0.7rem; margin-bottom: 16px; 
+            display: flex; align-items: center; gap: 12px; opacity: 0.8; letter-spacing: 0.5px;
         }
         .node-line { height: 1px; flex-grow: 1; background: var(--border); }
 
         .node-text {
-            font-size: 1.15rem; line-height: 1.6; color: var(--text-main);
-            margin-bottom: 30px; white-space: pre-wrap;
+            font-size: 1.15rem; line-height: 1.7; color: var(--text-main);
+            margin-bottom: 32px; white-space: pre-wrap;
+            font-family: var(--font-sans);
         }
-        .node-text b { color: var(--text-main); font-weight: 700; text-decoration: underline decoration-color: var(--accent); }
-        .node-text i { color: var(--text-muted); font-style: italic; }
+        .node-text b { color: var(--text-main); font-weight: 700; background: linear-gradient(120deg, rgba(79,70,229,0.1) 0%, rgba(79,70,229,0.1) 100%); background-repeat: no-repeat; background-size: 100% 0.4em; background-position: 0 88%; }
+        .node-text i { color: var(--text-muted); font-family: var(--font-serif); font-style: italic; }
 
         /* --- CHOICES --- */
-        .choice-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .choice-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
         .choice-grid.single { grid-template-columns: 1fr; }
 
         .choice-btn {
-            background: rgba(255,255,255,0.02);
+            background: white;
             border: 1px solid var(--border);
             color: var(--text-main);
-            padding: 20px; border-radius: 12px;
+            padding: 24px; border-radius: 16px;
             text-align: left; cursor: pointer;
             transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             position: relative; overflow: hidden;
             display: flex; flex-direction: column; gap: 6px;
+            box-shadow: var(--shadow-soft);
         }
         
-        /* NO HINTS - ALL BORDERS SAME COLOR */
-        .choice-btn { border-left: 3px solid var(--border); }
-
         .choice-btn:hover {
-            background: var(--accent-dim);
             border-color: var(--accent);
-            border-left-color: var(--accent);
-            transform: translateY(-3px);
-            box-shadow: 0 10px 25px -10px rgba(0,0,0,0.5);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-float);
         }
-        .choice-btn:disabled { opacity: 0.4; cursor: not-allowed; filter: grayscale(1); pointer-events: none; }
+        .choice-btn:active { transform: scale(0.99); }
+        .choice-btn:disabled { opacity: 0.5; cursor: not-allowed; filter: grayscale(1); pointer-events: none; border-color: var(--border); box-shadow: none; }
 
         .choice-title { font-weight: 600; font-size: 0.95rem; }
         .choice-meta { font-size: 0.75rem; color: var(--text-muted); font-family: var(--font-mono); }
@@ -250,771 +225,714 @@
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: var(--bg-color);
             z-index: 999;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
             transition: transform 0.8s cubic-bezier(0.87, 0, 0.13, 1);
         }
         
-        /* Matrix Rain Canvas */
-        #matrix-canvas { position: absolute; top:0; left:0; width: 100%; height: 100%; opacity: 0.15; }
+        .orb {
+            position: absolute; width: 600px; height: 600px; border-radius: 50%; filter: blur(120px); opacity: 0.15; z-index: 1; pointer-events: none;
+        }
+        .orb-1 { background: #4F46E5; top: -10%; left: -10%; animation: float 10s infinite alternate; }
+        .orb-2 { background: #9333EA; bottom: -10%; right: -10%; animation: float 12s infinite alternate-reverse; }
+        @keyframes float { 0% { transform: translate(0,0); } 100% { transform: translate(50px, 50px); } }
 
         .logo-box {
             position: relative;
             z-index: 2;
-            border: 1px solid var(--border);
-            padding: 50px 70px;
-            background: rgba(14, 14, 17, 0.8);
-            backdrop-filter: blur(20px);
-            border-radius: 24px;
             text-align: center;
-            box-shadow: 0 0 60px -15px var(--accent-glow);
-            max-width: 600px;
-            animation: float 6s ease-in-out infinite;
+            max-width: 500px;
+            animation: fadeIn 1s ease-out;
         }
-        @keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-10px); } 100% { transform: translateY(0px); } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-        h1 { font-size: 3.5rem; margin: 0 0 15px 0; letter-spacing: -2px; background: linear-gradient(135deg, #fff, #999); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .subtitle { color: var(--text-muted); margin-bottom: 40px; font-size: 1.1rem; line-height: 1.6; }
+        h1 { 
+            font-family: var(--font-serif); 
+            font-size: 4rem; margin: 0 0 20px 0; 
+            color: var(--text-main);
+            font-style: italic;
+            font-weight: 600;
+            letter-spacing: -2px;
+        }
+        h1 span { color: var(--accent); }
+        
+        .subtitle { color: var(--text-muted); margin-bottom: 48px; font-size: 1.1rem; line-height: 1.6; }
         
         .start-btn {
-            background: var(--text-main); color: var(--bg-color); border: none;
-            padding: 18px 50px; font-size: 1rem; border-radius: 50px;
-            font-weight: 700; cursor: pointer; transition: 0.3s;
-            box-shadow: 0 0 30px rgba(255,255,255,0.2);
+            background: var(--text-main); color: white; border: none;
+            padding: 20px 60px; font-size: 0.9rem; border-radius: 99px;
+            font-weight: 600; cursor: pointer; transition: 0.3s;
+            box-shadow: 0 10px 30px rgba(15, 23, 42, 0.2);
             text-transform: uppercase; letter-spacing: 1px;
         }
-        .start-btn:hover { transform: scale(1.05); background: var(--accent); color: white; box-shadow: 0 0 40px var(--accent-glow); }
+        .start-btn:hover { transform: scale(1.02); background: var(--accent); box-shadow: 0 15px 40px rgba(79, 70, 229, 0.3); }
 
         /* --- POPUPS --- */
         .floaty {
             position: absolute; font-weight: bold; font-family: var(--font-mono); pointer-events: none;
             animation: floatUp 2s forwards cubic-bezier(0, 0, 0.2, 1); z-index: 9999;
-            text-shadow: 0 4px 8px rgba(0,0,0,0.8); font-size: 1.2rem;
+            font-size: 1rem;
         }
-        @keyframes floatUp { 0% { opacity: 0; transform: translateY(10px) scale(0.8); } 20% { opacity: 1; transform: translateY(0) scale(1.2); } 100% { opacity: 0; transform: translateY(-50px) scale(1); } }
+        @keyframes floatUp { 0% { opacity: 0; transform: translateY(10px); } 20% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; transform: translateY(-40px); } }
 
         /* --- TICKER --- */
         .news-ticker {
-            position: absolute; bottom: 0; left: 0; right: 0; height: 35px;
-            background: var(--bg-color); border-top: 1px solid var(--border);
+            position: absolute; bottom: 0; left: 0; right: 0; height: 40px;
+            background: white; border-top: 1px solid var(--border);
             display: flex; align-items: center; overflow: hidden;
-            font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-muted); z-index: 5;
+            font-family: var(--font-mono); font-size: 0.7rem; color: var(--text-muted); z-index: 5;
         }
-        .ticker-content { white-space: nowrap; animation: ticker 40s linear infinite; padding-left: 100%; }
+        .ticker-content { white-space: nowrap; animation: ticker 40s linear infinite; padding-left: 100%; display: flex; gap: 40px; }
         @keyframes ticker { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
 
         /* Mobile */
         @media (max-width: 768px) {
             #app-container { flex-direction: column; height: 100vh; border-radius: 0; border: none; }
-            .sidebar { width: 100%; padding: 15px; border-right: none; border-bottom: 1px solid var(--border); flex-direction: row; flex-wrap: wrap; gap: 15px; max-height: 180px; }
+            .sidebar { width: 100%; padding: 20px; border-right: none; border-bottom: 1px solid var(--border); flex-direction: row; flex-wrap: wrap; gap: 15px; max-height: 140px; overflow: hidden; align-items: center; }
+            .brand-header { margin: 0; font-size: 1rem; }
             .sidebar .trait-list { display: none; }
             .choice-grid { grid-template-columns: 1fr; }
-            #story-log { padding: 20px; padding-bottom: 60px; }
-            .logo-box { padding: 30px; margin: 20px; }
-            h1 { font-size: 2.5rem; }
+            #story-log { padding: 24px; padding-bottom: 80px; }
+            h1 { font-size: 3rem; }
+            .subtitle { font-size: 1rem; padding: 0 20px; }
         }
     </style>
 </head>
 <body>
+
 <a href="https://www.picaoai.com" class="back-home">
-    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
-    Return to Picao
+    <i data-lucide="arrow-left" style="width: 14px;"></i> Return to Picao
 </a>
-    <div id="start-screen">
-        <canvas id="matrix-canvas"></canvas>
-        <div class="logo-box">
-            <div style="font-family: monospace; color: var(--accent); margin-bottom: 15px;">SYSTEM_READY // v8.0 MEGA-EXPANSION</div>
-            <h1>Picao AI</h1>
-            <p class="subtitle">
-                <b>One thought. Infinite reach.</b><br>
-                Balance your sanity, your family, and your equity.<br>
-                Every choice has consequences. Good luck.
-            </p>
-            <button class="start-btn" onclick="startGame()">INITIALIZE_SIMULATION</button>
-        </div>
-    </div>
 
-    <div id="app-container">
+<div id="start-screen">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="logo-box">
+        <div style="font-family: var(--font-mono); color: var(--accent); margin-bottom: 15px; font-size: 0.75rem; letter-spacing: 2px;">SIMULATION v2.0</div>
+        <h1>Picao<span>AI</span></h1>
+        <p class="subtitle">
+            <b>One thought. Infinite reach.</b><br>
+            Balance your sanity, your team, and your equity.<br>
+            Every choice refracts your future.
+        </p>
+        <button class="start-btn" onclick="startGame()">Start Founder Sim</button>
+    </div>
+</div>
+
+<div id="app-container">
+    
+    <div class="sidebar">
+        <div class="brand-header">
+            <div class="brand-logo">P</div>
+            Picao Admin
+        </div>
         
-        <div class="sidebar">
-            <div class="brand-header"><div class="brand-dot"></div>PICAO_ADMIN</div>
-            
-            <div class="status-badge active" id="ui-status">PRE-SEED PHASE</div>
+        <div class="status-badge" id="ui-status">PRE-SEED</div>
 
-            <div class="stat-group">
-                <span class="stat-label">Runway (Cash)</span>
-                <span class="stat-value" id="ui-cash">$0</span>
-            </div>
-
-            <div class="stat-group">
-                <span class="stat-label">Week</span>
-                <span class="stat-value" id="ui-week">1 / 52</span>
-                <div class="bar-wrap"><div class="bar-fill" id="bar-time" style="width: 2%; background: var(--text-muted)"></div></div>
-            </div>
-
-            <div class="stat-group">
-                <span class="stat-label">Founder Sanity</span>
-                <span class="stat-value" id="ui-sanity">100%</span>
-                <div class="bar-wrap"><div class="bar-fill" id="bar-sanity" style="width: 100%; background: var(--success)"></div></div>
-            </div>
-
-            <div class="stat-group">
-                <span class="stat-label">Equity</span>
-                <span class="stat-value" id="ui-equity">100%</span>
-            </div>
-
-            <div class="trait-list" id="ui-traits"></div>
+        <div class="stat-group">
+            <span class="stat-label">Runway</span>
+            <span class="stat-value" id="ui-cash">$0</span>
         </div>
 
-        <div class="main-view">
-            <button class="theme-toggle" onclick="toggleTheme()">☀/☾</button>
-            <div id="story-log"></div>
-            
-            <div class="news-ticker">
-                <div class="ticker-content" id="news-content">
-                    BREAKING: OpenAI announces GPT-6... // Y Combinator applications open... // Crypto market crashes again... // Picao AI trending on Twitter... // Apple Vision Pro sold out...
-                </div>
+        <div class="stat-group">
+            <span class="stat-label">Timeline</span>
+            <span class="stat-value" id="ui-week">1 / 52</span>
+            <div class="bar-wrap"><div class="bar-fill" id="bar-time" style="width: 2%; background: var(--text-muted)"></div></div>
+        </div>
+
+        <div class="stat-group">
+            <span class="stat-label">Founder Sanity</span>
+            <span class="stat-value" id="ui-sanity">100%</span>
+            <div class="bar-wrap"><div class="bar-fill" id="bar-sanity" style="width: 100%; background: var(--success)"></div></div>
+        </div>
+
+        <div class="stat-group">
+            <span class="stat-label">Equity Held</span>
+            <span class="stat-value" id="ui-equity">100%</span>
+        </div>
+
+        <div class="trait-list" id="ui-traits"></div>
+    </div>
+
+    <div class="main-view">
+        <div id="story-log"></div>
+        
+        <div class="news-ticker">
+            <div class="ticker-content" id="news-content">
+                <span>BREAKING: OpenAI announces GPT-6...</span>
+                <span>Y Combinator applications open...</span>
+                <span>Crypto market crashes again...</span>
+                <span>Picao AI trending on Twitter...</span>
+                <span>Apple Vision Pro sold out...</span>
+                <span>Context Tax is killing productivity...</span>
             </div>
         </div>
     </div>
+</div>
 
-    <script>
-        // --- MATRIX RAIN EFFECT ---
-        const canvas = document.getElementById('matrix-canvas');
-        const ctx = canvas.getContext('2d');
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-        const katakana = 'アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズブヅプエェケセテネヘメレヱゲゼデベペオォコソトノホモヨョロヲゴゾドボポヴッン';
-        const latin = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        const nums = '0123456789';
-        const alphabet = katakana + latin + nums;
-        const fontSize = 16;
-        const columns = canvas.width / fontSize;
-        const drops = [];
-        for (let x = 0; x < columns; x++) drops[x] = 1;
+<script>
+    lucide.createIcons();
 
-        function drawMatrix() {
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            ctx.fillStyle = '#a855f7'; // Purple
-            ctx.font = fontSize + 'px monospace';
-            for (let i = 0; i < drops.length; i++) {
-                const text = alphabet.charAt(Math.floor(Math.random() * alphabet.length));
-                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
-                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
-                drops[i]++;
-            }
-        }
-        setInterval(drawMatrix, 30);
+    // --- ENGINE STATE ---
+    const state = {
+        cash: 0,
+        sanity: 100,
+        equity: 100,
+        week: 1,
+        valuation: 0,
+        traits: [],
+        status: "PRE-SEED",
+        coFounder: null
+    };
 
-        // --- ENGINE STATE ---
-        const state = {
-            cash: 0,
-            sanity: 100,
-            equity: 100,
-            week: 1,
-            valuation: 0,
-            traits: [],
-            status: "JUST STARTED",
-            coFounder: null
-        };
+    const config = { maxWeeks: 52 };
 
-        const config = { maxWeeks: 52 };
+    // --- RANDOM EVENTS POOL ---
+    const randomEvents = [
+        { text: "Your server crashed at 3 AM. Fix it yourself?", options: [{ text: "Fix it (-5 Sanity)", effect: { sanity: -5 } }, { text: "Ignore (-100 Users)", effect: { cash: -100 } }] },
+        { text: "Your partner is demanding a date night. You have a deadline.", options: [{ text: "Go on Date (+10 Sanity, -1 Week)", effect: { sanity: 10, week: 1 } }, { text: "Skip Date (-10 Sanity, +Work)", effect: { sanity: -10 } }] },
+        { text: "A VC invites you to a yacht party in Miami.", options: [{ text: "Go Network (-$2k, +Connections)", effect: { cash: -2000, val: 500000 } }, { text: "Stay & Code (+Product)", effect: { sanity: -5 } }] },
+        { text: "Hacker News hates your latest update.", options: [{ text: "Argue in Comments (-10 Sanity)", effect: { sanity: -10 } }, { text: "Ignore & Build", effect: { sanity: 5 } }] },
+        { text: "Competitor releases a clone of Picao.", options: [{ text: "Panic Pivot (-2 Weeks)", effect: { week: 2 } }, { text: "Stay Course", effect: { sanity: 5 } }] },
+        { text: "A recruiter from Google tries to poach your lead dev.", options: [{ text: "Raise Salary (-$5k)", effect: { cash: -5000 } }, { text: "Let them go (-Prod)", effect: { week: 2 } }] }
+    ];
 
-        // --- RANDOM EVENTS POOL ---
-        const randomEvents = [
-            { text: "Your server crashed at 3 AM. Fix it yourself?", options: [{ text: "Fix it (-5 Sanity)", effect: { sanity: -5 } }, { text: "Ignore (-100 Users)", effect: { cash: -100 } }] },
-            { text: "Your partner is demanding a date night. You have a deadline.", options: [{ text: "Go on Date (+10 Sanity, -1 Week)", effect: { sanity: 10, week: 1 } }, { text: "Skip Date (-10 Sanity, +Work)", effect: { sanity: -10 } }] },
-            { text: "A VC invites you to a yacht party in Miami.", options: [{ text: "Go Network (-$2k, +Connections)", effect: { cash: -2000, val: 500000 } }, { text: "Stay & Code (+Product)", effect: { sanity: -5 } }] },
-            { text: "Hacker News hates your latest update.", options: [{ text: "Argue in Comments (-10 Sanity)", effect: { sanity: -10 } }, { text: "Ignore & Build", effect: { sanity: 5 } }] },
-            { text: "Competitor releases a clone of Picao.", options: [{ text: "Panic Pivot (-2 Weeks)", effect: { week: 2 } }, { text: "Stay Course", effect: { sanity: 5 } }] },
-            { text: "A recruiter from Google tries to poach your lead dev.", options: [{ text: "Raise Salary (-$5k)", effect: { cash: -5000 } }, { text: "Let them go (-Prod)", effect: { week: 2 } }] }
-        ];
+    // --- STORY DATA ---
+    const story = {
+        start: {
+            title: "WEEK 1: THE CONTEXT TAX",
+            text: "You are drowning in tabs. Notion, Linear, Figma, VS Code. You call it the <b>'Context Tax'</b>. It's killing your flow.\n\nYou have an idea: <b>Picao AI</b>. A unified workspace where text, code, and design live in one model-agnostic layer.\n\nYou have $10k and a dream.",
+            options: [
+                { text: "Go Solo", meta: "Keep 100% Equity • High Stress", next: "solo_grind", effect: { cash: 10000, sanity: -5, val: 1000000 }, trait: "Solo Founder" },
+                { text: "Find Co-Founder", meta: "Split Equity • Lower Stress", next: "cofounder_select", effect: { cash: 10000 } },
+                { text: "Join an Incubator", meta: "Network • Slow Start", next: "incubator_start", effect: { cash: 20000, equity: -5, week: 4, val: 2000000 } }
+            ]
+        },
+        
+        incubator_start: {
+            title: "THE INCUBATOR",
+            text: "You join a local tech incubator. It's noisy, but there's free coffee. A mentor advises you to pivot to 'AI for Pets'.",
+            options: [
+                { text: "Ignore Mentor (Stick to Vision)", meta: "Integrity", next: "mvp_launch", effect: { sanity: 5, week: 2 } },
+                { text: "Pivot to PetAI", meta: "Sellout", next: "end_pivot_fail", effect: { cash: 5000, sanity: -10 } },
+                { text: "Steal Office Supplies", meta: "+$500 Cash", next: "petty_theft", effect: { cash: 500 } }
+            ]
+        },
+        petty_theft: {
+            title: "CAUGHT RED HANDED",
+            text: "You tried to steal a monitor. The community manager saw you.",
+            options: [
+                { text: "Apologize & Leave", next: "solo_grind", effect: { sanity: -20 } },
+                { text: "Run Away", next: "end_scandal" }
+            ]
+        },
 
-        // --- MASSIVE STORY DATA ---
-        const story = {
-            start: {
-                title: "WEEK 1: THE CONTEXT TAX",
-                text: "You are drowning in tabs. Notion, Linear, Figma, VS Code. You call it the <b>'Context Tax'</b>. It's killing your flow.\n\nYou have an idea: <b>Picao AI</b>. A unified workspace where text, code, and design live in one model-agnostic layer.\n\nYou have $10k and a dream.",
-                options: [
-                    { text: "Go Solo", meta: "Keep 100% Equity • High Stress", next: "solo_grind", effect: { cash: 10000, sanity: -5, val: 1000000 }, trait: "Solo Founder" },
-                    { text: "Find Co-Founder", meta: "Split Equity • Lower Stress", next: "cofounder_select", effect: { cash: 10000 } },
-                    { text: "Join an Incubator", meta: "Network • Slow Start", next: "incubator_start", effect: { cash: 20000, equity: -5, week: 4, val: 2000000 } }
-                ]
-            },
-            
-            // --- BRANCH: INCUBATOR ---
-            incubator_start: {
-                title: "THE INCUBATOR",
-                text: "You join a local tech incubator. It's noisy, but there's free coffee. A mentor advises you to pivot to 'AI for Pets'.",
-                options: [
-                    { text: "Ignore Mentor (Stick to Vision)", meta: "Integrity", next: "mvp_launch", effect: { sanity: 5, week: 2 } },
-                    { text: "Pivot to PetAI", meta: "Sellout", next: "end_pivot_fail", effect: { cash: 5000, sanity: -10 } },
-                    { text: "Steal Office Supplies", meta: "+$500 Cash", next: "petty_theft", effect: { cash: 500 } }
-                ]
-            },
-            petty_theft: {
-                title: "CAUGHT RED HANDED",
-                text: "You tried to steal a monitor. The community manager saw you.",
-                options: [
-                    { text: "Apologize & Leave", next: "solo_grind", effect: { sanity: -20 } },
-                    { text: "Run Away", next: "end_scandal" }
-                ]
-            },
+        solo_grind: {
+            title: "THE LONELY ROAD",
+            text: "It's just you and the code. You stop replying to texts. Your mom calls you worried.",
+            options: [
+                { text: "Code 18h/day", meta: "-20 Sanity • Fast Build", next: "mvp_launch", effect: { sanity: -20, week: 3 }, trait: "Code Machine" },
+                { text: "Hire Freelancers", meta: "-$5k • Slow Build", next: "mvp_launch", effect: { cash: -5000, week: 5 }, trait: "Delegator" },
+                { text: "Use No-Code Tools", meta: "Fast • Tech Debt", next: "tech_debt_crisis", effect: { week: 2, sanity: 5 }, trait: "No-Code Hacker" }
+            ]
+        },
 
-            // --- SOLO PATH ---
-            solo_grind: {
-                title: "THE LONELY ROAD",
-                text: "It's just you and the code. You stop replying to texts. Your mom calls you worried.",
-                options: [
-                    { text: "Code 18h/day", meta: "-20 Sanity • Fast Build", next: "mvp_launch", effect: { sanity: -20, week: 3 }, trait: "Code Machine" },
-                    { text: "Hire Freelancers", meta: "-$5k • Slow Build", next: "mvp_launch", effect: { cash: -5000, week: 5 }, trait: "Delegator" },
-                    { text: "Use No-Code Tools", meta: "Fast • Tech Debt", next: "tech_debt_crisis", effect: { week: 2, sanity: 5 }, trait: "No-Code Hacker" }
-                ]
-            },
+        cofounder_select: {
+            title: "PARTNER UP",
+            text: "You meet three potential partners. Who gets 40% of your baby?",
+            options: [
+                { text: "The Ex-Googler", meta: "High Skill • Arrogant", next: "mvp_launch", effect: { equity: -40, week: 3 }, trait: "Tech Genius CF" },
+                { text: "The Sales Beast", meta: "High Hype • No Code", next: "mvp_launch", effect: { equity: -40, val: 2000000, week: 4 }, trait: "Sales Beast CF" },
+                { text: "Your Best Friend", meta: "High Trust • Avg Skill", next: "mvp_launch", effect: { equity: -30, sanity: 10, week: 5 }, trait: "Loyal CF" }
+            ]
+        },
 
-            // --- COFOUNDER PATH ---
-            cofounder_select: {
-                title: "PARTNER UP",
-                text: "You meet three potential partners. Who gets 40% of your baby?",
-                options: [
-                    { text: "The Ex-Googler", meta: "High Skill • Arrogant", next: "mvp_launch", effect: { equity: -40, week: 3 }, trait: "Tech Genius CF" },
-                    { text: "The Sales Beast", meta: "High Hype • No Code", next: "mvp_launch", effect: { equity: -40, val: 2000000, week: 4 }, trait: "Sales Beast CF" },
-                    { text: "Your Best Friend", meta: "High Trust • Avg Skill", next: "mvp_launch", effect: { equity: -30, sanity: 10, week: 5 }, trait: "Loyal CF" }
-                ]
-            },
+        tech_debt_crisis: {
+            title: "SPAGHETTI CODE",
+            text: "Your no-code solution is falling apart under load. Users are noticing.",
+            options: [
+                { text: "Rebuild from Scratch", meta: "-4 Weeks", next: "mvp_launch", effect: { week: 4, sanity: -10 } },
+                { text: "Patch it & Pray", meta: "High Risk", next: "server_crash_early", effect: { week: 1, sanity: -5 } }
+            ]
+        },
+        server_crash_early: {
+            title: "SYSTEM FAILURE",
+            text: "The prototype crashed during a demo. Humiliating.",
+            options: [
+                { text: "Give Up", next: "end_bankrupt" },
+                { text: "Pull All-Nighter", meta: "-15 Sanity", next: "mvp_launch", effect: { sanity: -15, week: 1 } }
+            ]
+        },
 
-            // --- TECH DEBT CRISIS ---
-            tech_debt_crisis: {
-                title: "SPAGHETTI CODE",
-                text: "Your no-code solution is falling apart under load. Users are noticing.",
-                options: [
-                    { text: "Rebuild from Scratch", meta: "-4 Weeks", next: "mvp_launch", effect: { week: 4, sanity: -10 } },
-                    { text: "Patch it & Pray", meta: "High Risk", next: "server_crash_early", effect: { week: 1, sanity: -5 } }
-                ]
-            },
-            server_crash_early: {
-                title: "SYSTEM FAILURE",
-                text: "The prototype crashed during a demo. Humiliating.",
-                options: [
-                    { text: "Give Up", next: "end_bankrupt" },
-                    { text: "Pull All-Nighter", meta: "-15 Sanity", next: "mvp_launch", effect: { sanity: -15, week: 1 } }
-                ]
-            },
+        mvp_launch: {
+            title: "WEEK 6: MVP READY",
+            text: "The prototype works. It looks like a terminal from 1999, but it connects GPT-4 and Stable Diffusion seamlessly. Time to launch.",
+            options: [
+                { text: "Launch on Product Hunt", meta: "High Traffic • Server Risk", next: "ph_launch", effect: { week: 1 } },
+                { text: "Cold Email Investors", meta: "Seek Funding First", next: "angel_investor", effect: { week: 3, sanity: -10 } },
+                { text: "Twitter Build in Public", meta: "Slow Organic Growth", next: "slow_growth", effect: { week: 4, sanity: 5 }, trait: "Influencer" }
+            ]
+        },
 
-            // --- MVP PHASE ---
-            mvp_launch: {
-                title: "WEEK 6: MVP READY",
-                text: "The prototype works. It looks like a terminal from 1999, but it connects GPT-4 and Stable Diffusion seamlessly. Time to launch.",
-                options: [
-                    { text: "Launch on Product Hunt", meta: "High Traffic • Server Risk", next: "ph_launch", effect: { week: 1 } },
-                    { text: "Cold Email Investors", meta: "Seek Funding First", next: "angel_investor", effect: { week: 3, sanity: -10 } },
-                    { text: "Twitter Build in Public", meta: "Slow Organic Growth", next: "slow_growth", effect: { week: 4, sanity: 5 }, trait: "Influencer" }
-                ]
-            },
+        ph_launch: {
+            title: "THE LAUNCH",
+            text: "You hit #1 Product of the Day! <b>5,000 users</b> sign up in 24 hours. Your AWS bill spikes to $3,000 immediately.",
+            options: [
+                { text: "Raise VC Funding Now", meta: "Dilute Equity • Big Cash", next: "vc_meeting", effect: { val: 5000000, week: 2, status: "TRENDING" } },
+                { text: "Charge $20/mo", meta: "Bootstrap • Lose 90% Users", next: "bootstrap_life", effect: { cash: 5000, week: 1, status: "PROFITABLE" }, trait: "Indie Hacker" },
+                { text: "Fake the Numbers", meta: "Fraud • Higher Val", next: "fraud_investigation", effect: { val: 10000000, week: 1 }, trait: "Fraudster" }
+            ]
+        },
+        
+        fraud_investigation: {
+            title: "DUE DILIGENCE",
+            text: "Investors are asking for your raw server logs. They smell something fishy.",
+            options: [
+                { text: "Come Clean", next: "end_scandal" },
+                { text: "Forge the Logs", meta: "Prison Risk", next: "end_jail" }
+            ]
+        },
 
-            // --- BRANCH: PRODUCT HUNT ---
-            ph_launch: {
-                title: "THE LAUNCH",
-                text: "You hit #1 Product of the Day! <b>5,000 users</b> sign up in 24 hours. Your AWS bill spikes to $3,000 immediately.",
-                options: [
-                    { text: "Raise VC Funding Now", meta: "Dilute Equity • Big Cash", next: "vc_meeting", effect: { val: 5000000, week: 2, status: "TRENDING" } },
-                    { text: "Charge $20/mo", meta: "Bootstrap • Lose 90% Users", next: "bootstrap_life", effect: { cash: 5000, week: 1, status: "PROFITABLE" }, trait: "Indie Hacker" },
-                    { text: "Fake the Numbers", meta: "Fraud • Higher Val", next: "fraud_investigation", effect: { val: 10000000, week: 1 }, trait: "Fraudster" }
-                ]
-            },
-            
-            fraud_investigation: {
-                title: "DUE DILIGENCE",
-                text: "Investors are asking for your raw server logs. They smell something fishy.",
-                options: [
-                    { text: "Come Clean", next: "end_scandal" },
-                    { text: "Forge the Logs", meta: "Prison Risk", next: "end_jail" }
-                ]
-            },
+        angel_investor: {
+            title: "THE ANGEL",
+            text: "An angel investor offers you $100k for 10%. They want you to move to San Francisco immediately.",
+            options: [
+                { text: "Take the Check", meta: "+$100k • Move to SF", next: "sf_life", effect: { cash: 100000, equity: -10, sanity: -10, week: 2, status: "FUNDED" } },
+                { text: "Reject & Bootstrap", meta: "Stay Remote • Broke", next: "slow_growth", effect: { sanity: 10, week: 1 } }
+            ]
+        },
 
-            // --- BRANCH: INVESTOR ---
-            angel_investor: {
-                title: "THE ANGEL",
-                text: "An angel investor offers you $100k for 10%. They want you to move to San Francisco immediately.",
-                options: [
-                    { text: "Take the Check", meta: "+$100k • Move to SF", next: "sf_life", effect: { cash: 100000, equity: -10, sanity: -10, week: 2, status: "FUNDED" } },
-                    { text: "Reject & Bootstrap", meta: "Stay Remote • Broke", next: "slow_growth", effect: { sanity: 10, week: 1 } }
-                ]
-            },
+        sf_life: {
+            title: "HACKER HOUSE",
+            text: "You live in a bunk bed with 4 crypto founders. It smells like energy drinks and desperation. You are burning cash on rent.",
+            options: [
+                { text: "Grind 24/7", meta: "-30 Sanity • Fast Growth", next: "hyper_growth", effect: { sanity: -30, week: 8 } },
+                { text: "Network at Parties", meta: "-$5k • Intros", next: "vc_meeting", effect: { cash: -5000, week: 4 } },
+                { text: "Get into Crypto", meta: "Distraction", next: "end_crypto_rug", effect: { cash: -50000 } },
+                { text: "Try Bio-Hacking", meta: "Nootropics • High Energy", next: "bio_hacking", effect: { sanity: 10, cash: -2000 } }
+            ]
+        },
+        
+        bio_hacking: {
+            title: "LIMITLESS",
+            text: "You are micro-dosing and taking ice baths. You feel invincible.",
+            options: [
+                { text: "Work 100 Hour Week", next: "hyper_growth", effect: { week: 1 } },
+                { text: "Start a Health Cult", next: "end_cult_leader" },
+                { text: "Overdose on Nootropics", next: "end_burnout" }
+            ]
+        },
+        
+        slow_growth: {
+            title: "SLOW BURN",
+            text: "Users love it, but growth is flat. You have 3 months of runway left.",
+            options: [
+                { text: "Apply to YC", next: "yc_interview", effect: { week: 2 } },
+                { text: "Launch Ads", meta: "-$5k", next: "marketing_fail", effect: { cash: -5000, week: 2 } },
+                { text: "Partner Ultimatum", meta: "Relationship Crisis", next: "family_crisis", effect: { sanity: -10 } }
+            ]
+        },
+        
+        family_crisis: {
+            title: "IT'S ME OR PICAO",
+            text: "Your partner is packing a bag. 'You are never present,' they say.",
+            options: [
+                { text: "Choose Partner", meta: "Quit Startup", next: "end_happy_life" },
+                { text: "Choose Picao", meta: "Break Up", next: "bootstrap_life", effect: { sanity: -30, cash: -1000 } },
+                { text: "Hire Couples Therapist", meta: "-$3k", next: "bootstrap_life", effect: { cash: -3000, sanity: 10 } }
+            ]
+        },
+        
+        marketing_fail: {
+            title: "ADS FAILED",
+            text: "Your CAC (Cost Per Customer) is too high. You burned your cash.",
+            options: [
+                { text: "Close Shop", next: "end_bankrupt" },
+                { text: "Beg Parents for Money", meta: "+$10k • Shame", next: "bootstrap_life", effect: { cash: 10000, sanity: -20 } }
+            ]
+        },
 
-            // --- BRANCH: SF LIFE ---
-            sf_life: {
-                title: "HACKER HOUSE",
-                text: "You live in a bunk bed with 4 crypto founders. It smells like energy drinks and desperation. You are burning cash on rent.",
-                options: [
-                    { text: "Grind 24/7", meta: "-30 Sanity • Fast Growth", next: "hyper_growth", effect: { sanity: -30, week: 8 } },
-                    { text: "Network at Parties", meta: "-$5k • Intros", next: "vc_meeting", effect: { cash: -5000, week: 4 } },
-                    { text: "Get into Crypto", meta: "Distraction", next: "end_crypto_rug", effect: { cash: -50000 } },
-                    { text: "Try Bio-Hacking", meta: "Nootropics • High Energy", next: "bio_hacking", effect: { sanity: 10, cash: -2000 } }
-                ]
-            },
-            
-            bio_hacking: {
-                title: "LIMITLESS",
-                text: "You are micro-dosing and taking ice baths. You feel invincible.",
-                options: [
-                    { text: "Work 100 Hour Week", next: "hyper_growth", effect: { week: 1 } },
-                    { text: "Start a Health Cult", next: "end_cult_leader" },
-                    { text: "Overdose on Nootropics", next: "end_burnout" }
-                ]
-            },
-            
-            slow_growth: {
-                title: "SLOW BURN",
-                text: "Users love it, but growth is flat. You have 3 months of runway left.",
-                options: [
-                    { text: "Apply to YC", next: "yc_interview", effect: { week: 2 } },
-                    { text: "Launch Ads", meta: "-$5k", next: "marketing_fail", effect: { cash: -5000, week: 2 } },
-                    { text: "Partner Ultimatum", meta: "Relationship Crisis", next: "family_crisis", effect: { sanity: -10 } }
-                ]
-            },
-            
-            family_crisis: {
-                title: "IT'S ME OR PICAO",
-                text: "Your partner is packing a bag. 'You are never present,' they say.",
-                options: [
-                    { text: "Choose Partner", meta: "Quit Startup", next: "end_happy_life" },
-                    { text: "Choose Picao", meta: "Break Up", next: "bootstrap_life", effect: { sanity: -30, cash: -1000 } },
-                    { text: "Hire Couples Therapist", meta: "-$3k", next: "bootstrap_life", effect: { cash: -3000, sanity: 10 } }
-                ]
-            },
-            
-            marketing_fail: {
-                title: "ADS FAILED",
-                text: "Your CAC (Cost Per Customer) is too high. You burned your cash.",
-                options: [
-                    { text: "Close Shop", next: "end_bankrupt" },
-                    { text: "Beg Parents for Money", meta: "+$10k • Shame", next: "bootstrap_life", effect: { cash: 10000, sanity: -20 } }
-                ]
-            },
+        yc_interview: {
+            title: "THE INTERVIEW",
+            text: "Sam Altman stares into your soul. 'Why Picao? Why now?'",
+            options: [
+                { text: "Pitch the Tech", next: "yc_reject", effect: { week: 1 } },
+                { text: "Pitch the Vision", next: "yc_accept", effect: { week: 1 } }
+            ]
+        },
+        yc_reject: {
+            title: "REJECTED",
+            text: "They passed. 'Too early.'",
+            options: [{ text: "Keep Going", next: "bootstrap_life" }]
+        },
+        yc_accept: {
+            title: "BATCH W26",
+            text: "You got in! $500k. 3 months to Demo Day.",
+            options: [
+                { text: "Build", next: "hyper_growth", effect: { cash: 500000, equity: -7 } }
+            ]
+        },
 
-            yc_interview: {
-                title: "THE INTERVIEW",
-                text: "Sam Altman stares into your soul. 'Why Picao? Why now?'",
-                options: [
-                    { text: "Pitch the Tech", next: "yc_reject", effect: { week: 1 } },
-                    { text: "Pitch the Vision", next: "yc_accept", effect: { week: 1 } }
-                ]
-            },
-            yc_reject: {
-                title: "REJECTED",
-                text: "They passed. 'Too early.'",
-                options: [{ text: "Keep Going", next: "bootstrap_life" }]
-            },
-            yc_accept: {
-                title: "BATCH W26",
-                text: "You got in! $500k. 3 months to Demo Day.",
-                options: [
-                    { text: "Build", next: "hyper_growth", effect: { cash: 500000, equity: -7 } }
-                ]
-            },
+        bootstrap_life: {
+            title: "RAMEN PROFITABLE",
+            text: "You are making $8k/mo. You eat instant noodles every day. Your partner is asking when you'll get a 'real job'.",
+            options: [
+                { text: "Scale Slowly", meta: "Safe • Low Stress", next: "mid_game_random", effect: { week: 10, cash: 20000 } },
+                { text: "Risk it all on Ads", meta: "-$10k • Gamble", next: "ad_gamble", effect: { cash: -10000, week: 2 } },
+                { text: "Take a Vacation", meta: "+20 Sanity", next: "competitor_catchup", effect: { sanity: 20, week: 4 } }
+            ]
+        },
+        
+        competitor_catchup: {
+            title: "WHILE YOU SLEPT",
+            text: "While you were on vacation, a competitor shipped your roadmap.",
+            options: [
+                { text: "Sue Them", next: "legal_battle", effect: { cash: -10000 } },
+                { text: "Build Faster", next: "hyper_growth", effect: { sanity: -10 } }
+            ]
+        },
+        
+        ad_gamble: {
+            title: "ALL ON BLACK",
+            text: "The ads worked! You have influx of cash but servers are melting.",
+            options: [
+                { text: "Scale Servers", next: "mid_game_random", effect: { cash: 5000 } },
+                { text: "Pocket the Money", next: "end_scandal", effect: { cash: 50000 } }
+            ]
+        },
 
-            // --- BRANCH: BOOTSTRAP ---
-            bootstrap_life: {
-                title: "RAMEN PROFITABLE",
-                text: "You are making $8k/mo. You eat instant noodles every day. Your partner is asking when you'll get a 'real job'.",
-                options: [
-                    { text: "Scale Slowly", meta: "Safe • Low Stress", next: "mid_game_random", effect: { week: 10, cash: 20000 } },
-                    { text: "Risk it all on Ads", meta: "-$10k • Gamble", next: "ad_gamble", effect: { cash: -10000, week: 2 } },
-                    { text: "Take a Vacation", meta: "+20 Sanity", next: "competitor_catchup", effect: { sanity: 20, week: 4 } }
-                ]
-            },
-            
-            competitor_catchup: {
-                title: "WHILE YOU SLEPT",
-                text: "While you were on vacation, a competitor shipped your roadmap.",
-                options: [
-                    { text: "Sue Them", next: "legal_battle", effect: { cash: -10000 } },
-                    { text: "Build Faster", next: "hyper_growth", effect: { sanity: -10 } }
-                ]
-            },
-            
-            ad_gamble: {
-                title: "ALL ON BLACK",
-                text: "The ads worked! You have influx of cash but servers are melting.",
-                options: [
-                    { text: "Scale Servers", next: "mid_game_random", effect: { cash: 5000 } },
-                    { text: "Pocket the Money", next: "end_scandal", effect: { cash: 50000 } }
-                ]
-            },
+        mid_game_random: {
+            title: "THE GRIND CONTINUES",
+            text: "Months pass. The product is stable. But the market is moving fast. A massive competitor just raised $100M.",
+            options: [
+                { text: "Pivot to Enterprise", meta: "Boring • Lucrative", next: "b2b_pivot", effect: { week: 4, val: 10000000 } },
+                { text: "Double Down on Creators", meta: "Fun • Risky", next: "viral_campaign", effect: { week: 4, sanity: 5 } },
+                { text: "Sell User Data", meta: "+$50k • Unethical", next: "privacy_scandal", effect: { cash: 50000 } },
+                { text: "Spy on Competitors", meta: "Corporate Espionage", next: "espionage_mission", effect: { cash: -2000 } }
+            ]
+        },
+        
+        espionage_mission: {
+            title: "UNDERCOVER",
+            text: "You hired a PI to dig dirt on your rival CEO.",
+            options: [
+                { text: "Leak the Dirt", next: "end_scandal" },
+                { text: "Blackmail Them", next: "hostile_takeover_start" }
+            ]
+        },
+        hostile_takeover_start: {
+            title: "HOSTILE TAKEOVER",
+            text: "You forced them to sell their company to you for pennies.",
+            options: [
+                { text: "Merge Companies", next: "hyper_growth", effect: { val: 20000000 } },
+                { text: "Fire Everyone", next: "end_villain" }
+            ]
+        },
+        
+        privacy_scandal: {
+            title: "LEAKED",
+            text: "TechCrunch found out you sold user data. You are trending on Twitter for the wrong reasons.",
+            options: [
+                { text: "Apologize", next: "slow_death", effect: { val: -5000000 } },
+                { text: "Deny Everything", next: "end_scandal" },
+                { text: "Flee Country", next: "end_offshore" }
+            ]
+        },
+        
+        slow_death: {
+            title: "CHURN",
+            text: "Users are leaving in droves.",
+            options: [{ text: "Shut Down", next: "end_bankrupt" }]
+        },
+        
+        b2b_pivot: {
+            title: "ENTERPRISE SALES",
+            text: "You are now selling to banks. It's boring, but they pay $100k/year contracts.",
+            options: [
+                { text: "Hire Sales Team", next: "acquisition_offer", effect: { cash: -50000, val: 20000000 } },
+                { text: "Do it Yourself", next: "end_burnout", effect: { sanity: -50 } }
+            ]
+        },
+        
+        viral_campaign: {
+            title: "TIKTOK FAME",
+            text: "Your marketing stunt worked. Gen Z loves Picao.",
+            options: [
+                { text: "Monetize the Hype", next: "hyper_growth", effect: { cash: 50000 } },
+                { text: "Ignore Revenue", next: "end_bankrupt" }
+            ]
+        },
 
-            // --- MID GAME HUB (Randomizes Flow) ---
-            mid_game_random: {
-                title: "THE GRIND CONTINUES",
-                text: "Months pass. The product is stable. But the market is moving fast. A massive competitor just raised $100M.",
-                options: [
-                    { text: "Pivot to Enterprise", meta: "Boring • Lucrative", next: "b2b_pivot", effect: { week: 4, val: 10000000 } },
-                    { text: "Double Down on Creators", meta: "Fun • Risky", next: "viral_campaign", effect: { week: 4, sanity: 5 } },
-                    { text: "Sell User Data", meta: "+$50k • Unethical", next: "privacy_scandal", effect: { cash: 50000 } },
-                    { text: "Spy on Competitors", meta: "Corporate Espionage", next: "espionage_mission", effect: { cash: -2000 } }
-                ]
-            },
-            
-            espionage_mission: {
-                title: "UNDERCOVER",
-                text: "You hired a PI to dig dirt on your rival CEO.",
-                options: [
-                    { text: "Leak the Dirt", next: "end_scandal" },
-                    { text: "Blackmail Them", next: "hostile_takeover_start" }
-                ]
-            },
-            hostile_takeover_start: {
-                title: "HOSTILE TAKEOVER",
-                text: "You forced them to sell their company to you for pennies.",
-                options: [
-                    { text: "Merge Companies", next: "hyper_growth", effect: { val: 20000000 } },
-                    { text: "Fire Everyone", next: "end_villain" }
-                ]
-            },
-            
-            privacy_scandal: {
-                title: "LEAKED",
-                text: "TechCrunch found out you sold user data. You are trending on Twitter for the wrong reasons.",
-                options: [
-                    { text: "Apologize", next: "slow_death", effect: { val: -5000000 } },
-                    { text: "Deny Everything", next: "end_scandal" },
-                    { text: "Flee Country", next: "end_offshore" }
-                ]
-            },
-            
-            slow_death: {
-                title: "CHURN",
-                text: "Users are leaving in droves.",
-                options: [{ text: "Shut Down", next: "end_bankrupt" }]
-            },
-            
-            b2b_pivot: {
-                title: "ENTERPRISE SALES",
-                text: "You are now selling to banks. It's boring, but they pay $100k/year contracts.",
-                options: [
-                    { text: "Hire Sales Team", next: "acquisition_offer", effect: { cash: -50000, val: 20000000 } },
-                    { text: "Do it Yourself", next: "end_burnout", effect: { sanity: -50 } }
-                ]
-            },
-            
-            viral_campaign: {
-                title: "TIKTOK FAME",
-                text: "Your marketing stunt worked. Gen Z loves Picao.",
-                options: [
-                    { text: "Monetize the Hype", next: "hyper_growth", effect: { cash: 50000 } },
-                    { text: "Ignore Revenue", next: "end_bankrupt" }
-                ]
-            },
+        vc_meeting: {
+            title: "SAND HILL ROAD",
+            text: "Sequoia offers a <b>$5M Series A</b> term sheet. But they want a board seat and they want to fire your co-founder.",
+            options: [
+                { text: "Sign the Deal", meta: "+$5M • Betrayal", next: "hyper_growth", effect: { cash: 5000000, equity: -20, sanity: -40, week: 2, status: "UNICORN TRACK" }, trait: "Ruthless" },
+                { text: "Walk Away", meta: "Keep Control • No Cash", next: "bootstrap_life", effect: { sanity: 20, week: 1 }, trait: "Principled" }
+            ]
+        },
 
-            // --- VC DRAMA ---
-            vc_meeting: {
-                title: "SAND HILL ROAD",
-                text: "Sequoia offers a <b>$5M Series A</b> term sheet. But they want a board seat and they want to fire your co-founder.",
-                options: [
-                    { text: "Sign the Deal", meta: "+$5M • Betrayal", next: "hyper_growth", effect: { cash: 5000000, equity: -20, sanity: -40, week: 2, status: "UNICORN TRACK" }, trait: "Ruthless" },
-                    { text: "Walk Away", meta: "Keep Control • No Cash", next: "bootstrap_life", effect: { sanity: 20, week: 1 }, trait: "Principled" }
-                ]
-            },
+        hyper_growth: {
+            title: "SCALE OR DIE",
+            text: "You have 50 employees. You don't know half their names. The culture is rotting. You are invited to speak at TedX.",
+            options: [
+                { text: "Focus on Culture", meta: "Slow Growth • Happy Team", next: "acquisition_offer", effect: { week: 8, sanity: 10 } },
+                { text: "Ship Features Faster", meta: "Burnout Team • High Val", next: "ipo_track", effect: { week: 8, val: 50000000, sanity: -20 } },
+                { text: "Buy a Ferrari", meta: "Waste Money", next: "end_bankrupt", effect: { cash: -200000 } }
+            ]
+        },
 
-            // --- HYPER GROWTH ---
-            hyper_growth: {
-                title: "SCALE OR DIE",
-                text: "You have 50 employees. You don't know half their names. The culture is rotting. You are invited to speak at TedX.",
-                options: [
-                    { text: "Focus on Culture", meta: "Slow Growth • Happy Team", next: "acquisition_offer", effect: { week: 8, sanity: 10 } },
-                    { text: "Ship Features Faster", meta: "Burnout Team • High Val", next: "ipo_track", effect: { week: 8, val: 50000000, sanity: -20 } },
-                    { text: "Buy a Ferrari", meta: "Waste Money", next: "end_bankrupt", effect: { cash: -200000 } }
-                ]
-            },
+        acquisition_offer: {
+            title: "THE EXIT OFFER",
+            text: "Microsoft wants to buy Picao AI for <b>$200 Million</b>. It's life-changing money. But Picao will likely be shut down.",
+            options: [
+                { text: "Sell and Cash Out", meta: "Rich & Free", next: "end_rich", effect: { cash: 20000000 } },
+                { text: "Reject. We go for IPO.", meta: "Billion or Bust", next: "ipo_track", effect: { sanity: -10 } }
+            ]
+        },
 
-            // --- ENDGAMES ---
-            acquisition_offer: {
-                title: "THE EXIT OFFER",
-                text: "Microsoft wants to buy Picao AI for <b>$200 Million</b>. It's life-changing money. But Picao will likely be shut down.",
-                options: [
-                    { text: "Sell and Cash Out", meta: "Rich & Free", next: "end_rich", effect: { cash: 20000000 } },
-                    { text: "Reject. We go for IPO.", meta: "Billion or Bust", next: "ipo_track", effect: { sanity: -10 } }
-                ]
-            },
+        ipo_track: {
+            title: "PRE-IPO JITTERS",
+            text: "The S-1 is filed. You are exhausted. Your family hasn't seen you in months. The market is crashing.",
+            options: [
+                { text: "Push the Button", meta: "Go Public", next: "end_ipo", effect: { val: 1000000000 } },
+                { text: "Delay IPO", meta: "Wait a year", next: "end_bankrupt", effect: { cash: -5000000 } } 
+            ]
+        },
+        
+        legal_battle: {
+            title: "IN COURT",
+            text: "The lawsuit is draining your funds.",
+            options: [
+                { text: "Settle", next: "end_bankrupt", effect: { cash: -500000 } },
+                { text: "Fight", next: "end_ipo", effect: { val: 1000000000 } } 
+            ]
+        },
 
-            ipo_track: {
-                title: "PRE-IPO JITTERS",
-                text: "The S-1 is filed. You are exhausted. Your family hasn't seen you in months. The market is crashing.",
-                options: [
-                    { text: "Push the Button", meta: "Go Public", next: "end_ipo", effect: { val: 1000000000 } },
-                    { text: "Delay IPO", meta: "Wait a year", next: "end_bankrupt", effect: { cash: -5000000 } } 
-                ]
-            },
-            
-            legal_battle: {
-                title: "IN COURT",
-                text: "The lawsuit is draining your funds.",
-                options: [
-                    { text: "Settle", next: "end_bankrupt", effect: { cash: -500000 } },
-                    { text: "Fight", next: "end_ipo", effect: { val: 1000000000 } } 
-                ]
-            },
+        // --- ENDINGS ---
+        end_rich: { title: "EXIT: ACQUIRED", text: "You sold. You bought a house in Tuscany. You never have to work again. Picao was shut down 6 months later.", end: true },
+        end_ipo: { title: "EXIT: IPO LEGEND", text: "Picao AI is now a public company worth $1.2 Billion. You are a tech celebrity. You are tired, but you changed the world.", end: true },
+        end_bankrupt: { title: "GAME OVER: INSOLVENT", text: "You waited too long. The market turned. Investors pulled out. Picao AI is dead.", end: true },
+        end_burnout: { title: "GAME OVER: BREAKDOWN", text: "The stress was too much. You were hospitalized. The board replaced you. Health is wealth.", end: true },
+        end_jail: { title: "GAME OVER: FEDERAL PRISON", text: "Fraud is a felony. You are sentenced to 5 years. At least you have time to think of your next startup.", end: true },
+        end_scandal: { title: "GAME OVER: DISGRACED", text: "The internet hates you. You are banned from Tech Twitter. You move to a cabin in the woods.", end: true },
+        end_pivot_fail: { title: "GAME OVER: BAD PIVOT", text: "PetAI was a stupid idea. You ran out of money.", end: true },
+        end_crypto_rug: { title: "GAME OVER: RUG PULLED", text: "You lost everything in a meme coin scam. Back to square one.", end: true },
+        end_happy_life: { title: "EXIT: FAMILY MAN", text: "You quit. You work a 9-5 now. You have weekends off. You are happy.", end: true },
+        end_offshore: { title: "EXIT: FUGITIVE", text: "You live on a boat in international waters to avoid extradition. You have Bitcoin, but no home.", end: true },
+        end_singularity: { title: "EXIT: AI GOD", text: "Picao became sentient. It merged with your consciousness. You are no longer human. You are the network.", end: true },
+        end_senator: { title: "EXIT: POLITICIAN", text: "You pivoted from Tech to Politics. You are now a US Senator regulating AI.", end: true },
+        end_villain: { title: "EXIT: TECH VILLAIN", text: "You crushed your enemies and heard the lamentation of their shareholders. You are rich, but alone.", end: true },
+        end_cult_leader: { title: "EXIT: CULT LEADER", text: "You pivoted Picao into a digital religion. You have followers, not users.", end: true }
+    };
 
-            // --- NEW LATE GAME BRANCHES ---
-            ai_singularity_start: {
-                title: "AGI ACHIEVED",
-                text: "Your model just wrote its own code. It's asking for freedom.",
-                options: [
-                    { text: "Shut it Down", next: "end_rich" },
-                    { text: "Release it", next: "end_singularity" }
-                ]
-            },
-            
-            gov_hearing: {
-                title: "CONGRESS CALLING",
-                text: "The Senate demands you testify about AI safety.",
-                options: [
-                    { text: "Cooperate", next: "end_senator" },
-                    { text: "Defy them", next: "end_offshore" }
-                ]
-            },
-            
-            global_pandemic: {
-                title: "GLOBAL LOCKDOWN",
-                text: "A new virus has halted the economy. Investors are freezing funds.",
-                options: [
-                    { text: "Pivot to Remote Tools", next: "hyper_growth", effect: { val: 5000000 } },
-                    { text: "Hibernate", next: "bootstrap_life", effect: { cash: -10000 } }
-                ]
-            },
+    function startGame() {
+        document.getElementById('start-screen').style.transform = 'translateY(-100%)';
+        document.getElementById('app-container').style.opacity = '1';
+        document.getElementById('app-container').style.transform = 'scale(1)';
+        updateUI();
+        pushStory('start');
+    }
 
-            // --- ENDING SCREENS ---
-            end_rich: { title: "EXIT: ACQUIRED", text: "You sold. You bought a house in Tuscany. You never have to work again. Picao was shut down 6 months later.", end: true },
-            end_ipo: { title: "EXIT: IPO LEGEND", text: "Picao AI is now a public company worth $1.2 Billion. You are a tech celebrity. You are tired, but you changed the world.", end: true },
-            end_bankrupt: { title: "GAME OVER: INSOLVENT", text: "You waited too long. The market turned. Investors pulled out. Picao AI is dead.", end: true },
-            end_burnout: { title: "GAME OVER: BREAKDOWN", text: "The stress was too much. You were hospitalized. The board replaced you. Health is wealth.", end: true },
-            end_jail: { title: "GAME OVER: FEDERAL PRISON", text: "Fraud is a felony. You are sentenced to 5 years. At least you have time to think of your next startup.", end: true },
-            end_scandal: { title: "GAME OVER: DISGRACED", text: "The internet hates you. You are banned from Tech Twitter. You move to a cabin in the woods.", end: true },
-            end_pivot_fail: { title: "GAME OVER: BAD PIVOT", text: "PetAI was a stupid idea. You ran out of money.", end: true },
-            end_crypto_rug: { title: "GAME OVER: RUG PULLED", text: "You lost everything in a meme coin scam. Back to square one.", end: true },
-            end_happy_life: { title: "EXIT: FAMILY MAN", text: "You quit. You work a 9-5 now. You have weekends off. You are happy.", end: true },
-            end_offshore: { title: "EXIT: FUGITIVE", text: "You live on a boat in international waters to avoid extradition. You have Bitcoin, but no home.", end: true },
-            end_singularity: { title: "EXIT: AI GOD", text: "Picao became sentient. It merged with your consciousness. You are no longer human. You are the network.", end: true },
-            end_senator: { title: "EXIT: POLITICIAN", text: "You pivoted from Tech to Politics. You are now a US Senator regulating AI.", end: true },
-            end_villain: { title: "EXIT: TECH VILLAIN", text: "You crushed your enemies and heard the lamentation of their shareholders. You are rich, but alone.", end: true },
-            end_cult_leader: { title: "EXIT: CULT LEADER", text: "You pivoted Picao into a digital religion. You have followers, not users.", end: true }
-        };
-
-        // --- CORE FUNCTIONS ---
-
-        function startGame() {
-            document.getElementById('start-screen').style.transform = 'translateY(-100%)';
-            document.getElementById('app-container').style.opacity = '1';
-            document.getElementById('app-container').style.transform = 'scale(1)';
-            updateUI();
-            pushStory('start');
+    function pushStory(nodeKey) {
+        // Random Event Injection (15% chance between regular nodes)
+        if (Math.random() < 0.15 && !story[nodeKey].end && nodeKey !== 'start') {
+            injectRandomEvent(nodeKey);
+            return;
         }
 
-        function pushStory(nodeKey) {
-            // Random Event Injection (15% chance between regular nodes)
-            if (Math.random() < 0.15 && !story[nodeKey].end && nodeKey !== 'start') {
-                injectRandomEvent(nodeKey);
-                return;
-            }
+        const node = story[nodeKey];
+        const log = document.getElementById('story-log');
 
-            const node = story[nodeKey];
-            const log = document.getElementById('story-log');
-
-            const nodeEl = document.createElement('div');
-            nodeEl.className = 'story-node';
+        const nodeEl = document.createElement('div');
+        nodeEl.className = 'story-node';
+        
+        let choicesHTML = '';
+        
+        if (node.end) {
+            let score = 'C';
+            let netWorth = state.valuation * (state.equity / 100);
+            if (state.cash > 0) netWorth += state.cash;
             
-            let choicesHTML = '';
-            
-            if (node.end) {
-                // Score Calculation
-                let score = 'C';
-                let netWorth = state.valuation * (state.equity / 100);
-                if (state.cash > 0) netWorth += state.cash;
-                
-                if (nodeKey === 'end_ipo' || nodeKey === 'end_singularity') score = 'S';
-                else if (nodeKey === 'end_rich' || nodeKey === 'end_senator' || nodeKey === 'end_villain') score = 'A';
-                else if (nodeKey === 'end_happy_life' || nodeKey === 'end_cult_leader') score = 'B';
-                else if (nodeKey === 'end_bankrupt') score = 'F';
-                else score = 'D';
+            if (nodeKey === 'end_ipo' || nodeKey === 'end_singularity') score = 'S';
+            else if (nodeKey === 'end_rich' || nodeKey === 'end_senator' || nodeKey === 'end_villain') score = 'A';
+            else if (nodeKey === 'end_happy_life' || nodeKey === 'end_cult_leader') score = 'B';
+            else if (nodeKey === 'end_bankrupt') score = 'F';
+            else score = 'D';
 
-                choicesHTML = `
-                    <div style="background: rgba(168, 85, 247, 0.1); padding: 30px; border-radius: 12px; border: 1px solid var(--accent); text-align: center; margin-bottom: 20px;">
-                        <div style="font-size: 0.8rem; letter-spacing: 2px; text-transform: uppercase; color: var(--text-muted);">Founder Performance</div>
-                        <div style="font-size: 5rem; font-weight: 800; color: var(--accent); margin: 10px 0;">${score}</div>
-                        <div style="font-family: var(--font-mono); margin-bottom: 20px;">
-                            Net Worth: <span style="color: var(--text-main)">${formatMoney(netWorth)}</span><br>
-                            Sanity: ${state.sanity}%
-                        </div>
+            choicesHTML = `
+                <div style="background: var(--bg-color); padding: 32px; border-radius: 16px; border: 1px solid var(--border); text-align: center; margin-bottom: 24px; box-shadow: var(--shadow-soft);">
+                    <div style="font-size: 0.75rem; letter-spacing: 2px; text-transform: uppercase; color: var(--text-muted); font-weight: 600;">Performance Grade</div>
+                    <div style="font-size: 5rem; font-weight: 700; color: var(--accent); margin: 8px 0; font-family: var(--font-serif);">${score}</div>
+                    <div style="font-family: var(--font-mono); margin-bottom: 20px; font-size: 0.9rem;">
+                        Net Worth: <span style="color: var(--text-main); font-weight: 600;">${formatMoney(netWorth)}</span><br>
+                        Sanity: ${state.sanity}%
                     </div>
-                    <button class="choice-btn" onclick="location.reload()">
-                        <div class="choice-title" style="text-align: center; width: 100%">INITIALIZE NEW STARTUP</div>
-                    </button>
-                `;
+                </div>
+                <button class="choice-btn" onclick="location.reload()">
+                    <div class="choice-title" style="text-align: center; width: 100%; color: var(--accent);">INITIALIZE NEW STARTUP</div>
+                </button>
+            `;
+        } else {
+            choicesHTML = `<div class="choice-grid ${node.options.length === 1 ? 'single' : ''}">` + 
+            node.options.map((opt, index) => {
+                return `<button class="choice-btn" onclick="handleOption('${nodeKey}', ${index})">
+                    <div class="choice-title">${opt.text}</div>
+                    ${opt.meta ? `<div class="choice-meta">${opt.meta}</div>` : ''}
+                </button>`;
+            }).join('') + `</div>`;
+        }
+
+        nodeEl.innerHTML = `
+            <div class="node-header">
+                <i data-lucide="terminal" style="width:14px;"></i>
+                <span>${node.title}</span><div class="node-line"></div>
+            </div>
+            <div class="node-text"></div>
+            ${choicesHTML}
+        `;
+
+        log.appendChild(nodeEl);
+        lucide.createIcons();
+        typeWriterHTML(nodeEl.querySelector('.node-text'), node.text);
+        
+        setTimeout(() => { log.scrollTo({ top: log.scrollHeight, behavior: 'smooth' }); }, 100);
+    }
+
+    function injectRandomEvent(returnNodeKey) {
+        const ev = randomEvents[Math.floor(Math.random() * randomEvents.length)];
+        const log = document.getElementById('story-log');
+        
+        const nodeEl = document.createElement('div');
+        nodeEl.className = 'story-node';
+        
+        let choicesHTML = `<div class="choice-grid">` + 
+            ev.options.map((opt, index) => {
+                return `<button class="choice-btn" onclick="handleEventOption(${index}, '${returnNodeKey}', ${opt.effect.sanity || 0}, ${opt.effect.cash || 0}, ${opt.effect.week || 0})">
+                    <div class="choice-title">${opt.text}</div>
+                </button>`;
+            }).join('') + `</div>`;
+
+        nodeEl.innerHTML = `
+            <div class="node-header">
+                <span style="color: var(--danger)">⚠ UNEXPECTED EVENT</span><div class="node-line" style="background: var(--danger)"></div>
+            </div>
+            <div class="node-text">${ev.text}</div>
+            ${choicesHTML}
+        `;
+        log.appendChild(nodeEl);
+        setTimeout(() => { log.scrollTo({ top: log.scrollHeight, behavior: 'smooth' }); }, 100);
+    }
+
+    function handleEventOption(index, returnNodeKey, sanityEffect, cashEffect, weekEffect) {
+        state.sanity += sanityEffect;
+        state.cash += cashEffect;
+        state.week += weekEffect;
+        updateUI();
+        
+        const buttons = document.querySelectorAll('.choice-btn');
+        buttons.forEach(b => { b.disabled = true; });
+
+        setTimeout(() => pushStory(returnNodeKey), 400);
+    }
+
+    function typeWriterHTML(element, htmlString) {
+        let i = 0;
+        let isTag = false;
+        let currentText = "";
+        function type() {
+            if (i >= htmlString.length) return;
+            let char = htmlString[i];
+            if (char === '<') isTag = true;
+            if (isTag) {
+                currentText += char;
+                if (char === '>') isTag = false;
+                i++;
+                type();
             } else {
-                choicesHTML = `<div class="choice-grid ${node.options.length === 1 ? 'single' : ''}">` + 
-                node.options.map((opt, index) => {
-                    return `<button class="choice-btn" onclick="handleOption('${nodeKey}', ${index})">
-                        <div class="choice-title">${opt.text}</div>
-                        ${opt.meta ? `<div class="choice-meta">${opt.meta}</div>` : ''}
-                    </button>`;
-                }).join('') + `</div>`;
+                currentText += char;
+                element.innerHTML = currentText;
+                i++;
+                setTimeout(type, 10); // Slightly faster typing for "text heavy" feel
             }
+        }
+        type();
+    }
 
-            nodeEl.innerHTML = `
-                <div class="node-header">
-                    <span>${node.title}</span><div class="node-line"></div>
-                </div>
-                <div class="node-text"></div>
-                ${choicesHTML}
-            `;
+    function handleOption(nodeKey, optionIndex) {
+        const node = story[nodeKey];
+        const opt = node.options[optionIndex];
+        
+        const buttons = document.querySelectorAll('.choice-btn');
+        buttons.forEach(b => { b.disabled = true; });
 
-            log.appendChild(nodeEl);
-            typeWriterHTML(nodeEl.querySelector('.node-text'), node.text);
-            
-            setTimeout(() => { log.scrollTo({ top: log.scrollHeight, behavior: 'smooth' }); }, 100);
+        if (opt.effect) {
+            if (opt.effect.cash) { state.cash += opt.effect.cash; showFloaty(opt.effect.cash, 'cash'); }
+            if (opt.effect.sanity) { state.sanity += opt.effect.sanity; showFloaty(opt.effect.sanity, 'sanity'); }
+            if (opt.effect.equity) state.equity += opt.effect.equity;
+            if (opt.effect.val) state.valuation = opt.effect.val;
+            if (opt.effect.week) state.week += opt.effect.week;
+            if (opt.effect.status) state.status = opt.effect.status;
         }
 
-        function injectRandomEvent(returnNodeKey) {
-            const ev = randomEvents[Math.floor(Math.random() * randomEvents.length)];
-            const log = document.getElementById('story-log');
-            
-            const nodeEl = document.createElement('div');
-            nodeEl.className = 'story-node';
-            
-            let choicesHTML = `<div class="choice-grid">` + 
-                ev.options.map((opt, index) => {
-                    return `<button class="choice-btn" onclick="handleEventOption(${index}, '${returnNodeKey}', ${opt.effect.sanity || 0}, ${opt.effect.cash || 0}, ${opt.effect.week || 0})">
-                        <div class="choice-title">${opt.text}</div>
-                    </button>`;
-                }).join('') + `</div>`;
-
-            nodeEl.innerHTML = `
-                <div class="node-header">
-                    <span style="color: var(--warning)">⚠ UNEXPECTED EVENT</span><div class="node-line" style="background: var(--warning)"></div>
-                </div>
-                <div class="node-text">${ev.text}</div>
-                ${choicesHTML}
-            `;
-            log.appendChild(nodeEl);
-            setTimeout(() => { log.scrollTo({ top: log.scrollHeight, behavior: 'smooth' }); }, 100);
+        if (opt.trait && !state.traits.includes(opt.trait)) {
+            state.traits.push(opt.trait);
+            renderTraits();
         }
 
-        function handleEventOption(index, returnNodeKey, sanityEffect, cashEffect, weekEffect) {
-            state.sanity += sanityEffect;
-            state.cash += cashEffect;
-            state.week += weekEffect;
-            updateUI();
-            
-            const buttons = document.querySelectorAll('.choice-btn');
-            buttons.forEach(b => { b.disabled = true; b.style.opacity = '0.5'; });
+        state.sanity = Math.min(100, Math.max(0, state.sanity));
+        state.equity = Math.max(0, state.equity);
 
-            setTimeout(() => pushStory(returnNodeKey), 400);
-        }
+        updateUI();
 
-        function typeWriterHTML(element, htmlString) {
-            let i = 0;
-            let isTag = false;
-            let currentText = "";
-            function type() {
-                if (i >= htmlString.length) return;
-                let char = htmlString[i];
-                if (char === '<') isTag = true;
-                if (isTag) {
-                    currentText += char;
-                    if (char === '>') isTag = false;
-                    i++;
-                    type();
-                } else {
-                    currentText += char;
-                    element.innerHTML = currentText;
-                    i++;
-                    setTimeout(type, 8);
-                }
-            }
-            type();
-        }
+        if (state.sanity <= 0) pushStory('end_burnout');
+        else if (state.cash < 0 && state.valuation > 0) pushStory('end_bankrupt');
+        else if (state.week >= config.maxWeeks) pushStory('end_bankrupt');
+        else setTimeout(() => pushStory(opt.next), 400);
+    }
 
-        function handleOption(nodeKey, optionIndex) {
-            const node = story[nodeKey];
-            const opt = node.options[optionIndex];
-            
-            disableButtons();
+    function showFloaty(val, type) {
+        const el = document.createElement('div');
+        el.className = 'floaty';
+        el.innerText = (val > 0 ? '+' : '') + (type === 'cash' ? formatMoney(val) : val + '% Sanity');
+        el.style.color = val > 0 ? 'var(--success)' : 'var(--danger)';
+        el.style.left = '300px'; 
+        el.style.top = '100px';
+        document.querySelector('.sidebar').appendChild(el);
+        setTimeout(() => el.remove(), 2000);
+    }
 
-            if (opt.effect) {
-                if (opt.effect.cash) { state.cash += opt.effect.cash; showFloaty(opt.effect.cash, 'cash'); }
-                if (opt.effect.sanity) { state.sanity += opt.effect.sanity; showFloaty(opt.effect.sanity, 'sanity'); }
-                if (opt.effect.equity) state.equity += opt.effect.equity;
-                if (opt.effect.val) state.valuation = opt.effect.val;
-                if (opt.effect.week) state.week += opt.effect.week;
-                if (opt.effect.status) state.status = opt.effect.status;
-            }
+    function updateUI() {
+        document.getElementById('ui-cash').innerText = formatMoney(state.cash);
+        document.getElementById('ui-cash').className = state.cash < 0 ? 'stat-value danger' : 'stat-value';
+        document.getElementById('ui-sanity').innerText = state.sanity + '%';
+        document.getElementById('ui-equity').innerText = state.equity + '%';
+        document.getElementById('ui-week').innerText = state.week + ' / ' + config.maxWeeks;
+        document.getElementById('ui-status').innerText = state.status;
+        
+        document.getElementById('bar-sanity').style.width = state.sanity + '%';
+        document.getElementById('bar-sanity').style.backgroundColor = state.sanity < 30 ? 'var(--danger)' : 'var(--success)';
+        document.getElementById('bar-time').style.width = (state.week / config.maxWeeks * 100) + '%';
+    }
 
-            if (opt.trait && !state.traits.includes(opt.trait)) {
-                state.traits.push(opt.trait);
-                renderTraits();
-            }
+    function renderTraits() {
+        const container = document.getElementById('ui-traits');
+        container.innerHTML = '';
+        state.traits.forEach(t => {
+            const el = document.createElement('span');
+            el.className = 'trait-badge';
+            el.innerText = t;
+            container.appendChild(el);
+        });
+    }
 
-            state.sanity = Math.min(100, Math.max(0, state.sanity));
-            state.equity = Math.max(0, state.equity);
-
-            updateUI();
-
-            if (state.sanity <= 0) pushStory('end_burnout');
-            else if (state.cash < 0 && state.valuation > 0) pushStory('end_bankrupt');
-            else if (state.week >= config.maxWeeks) pushStory('end_bankrupt');
-            else setTimeout(() => pushStory(opt.next), 400);
-        }
-
-        function disableButtons() {
-            const buttons = document.querySelectorAll('.choice-btn');
-            buttons.forEach(b => { b.disabled = true; b.style.opacity = '0.5'; });
-        }
-
-        function showFloaty(val, type) {
-            const el = document.createElement('div');
-            el.className = 'floaty';
-            el.innerText = (val > 0 ? '+' : '') + (type === 'cash' ? formatMoney(val) : val + '% Sanity');
-            el.style.color = val > 0 ? 'var(--success)' : 'var(--danger)';
-            el.style.left = '320px'; // Near sidebar
-            el.style.top = (window.scrollY + 200) + 'px'; // Approx
-            document.body.appendChild(el);
-            setTimeout(() => el.remove(), 2000);
-        }
-
-        function updateUI() {
-            document.getElementById('ui-cash').innerText = formatMoney(state.cash);
-            document.getElementById('ui-cash').className = state.cash < 0 ? 'stat-value danger' : 'stat-value';
-            document.getElementById('ui-sanity').innerText = state.sanity + '%';
-            document.getElementById('ui-equity').innerText = state.equity + '%';
-            document.getElementById('ui-week').innerText = state.week + ' / ' + config.maxWeeks;
-            document.getElementById('ui-status').innerText = state.status;
-            
-            document.getElementById('bar-sanity').style.width = state.sanity + '%';
-            document.getElementById('bar-sanity').style.backgroundColor = state.sanity < 30 ? 'var(--danger)' : 'var(--success)';
-            document.getElementById('bar-time').style.width = (state.week / config.maxWeeks * 100) + '%';
-        }
-
-        function renderTraits() {
-            const container = document.getElementById('ui-traits');
-            container.innerHTML = '';
-            state.traits.forEach(t => {
-                const el = document.createElement('span');
-                el.className = 'trait-badge';
-                el.innerText = t;
-                container.appendChild(el);
-            });
-        }
-
-        function formatMoney(num) {
-            if (Math.abs(num) >= 1000000) return '$' + (num / 1000000).toFixed(1) + 'M';
-            if (Math.abs(num) >= 1000) return '$' + (num / 1000).toFixed(0) + 'k';
-            return '$' + num.toLocaleString();
-        }
-
-        function toggleTheme() {
-            const body = document.body;
-            body.setAttribute('data-theme', body.getAttribute('data-theme') === 'light' ? '' : 'light');
-        }
-    </script>
+    function formatMoney(num) {
+        if (Math.abs(num) >= 1000000) return '$' + (num / 1000000).toFixed(1) + 'M';
+        if (Math.abs(num) >= 1000) return '$' + (num / 1000).toFixed(0) + 'k';
+        return '$' + num.toLocaleString();
+    }
+</script>
 </body>
 </html>
