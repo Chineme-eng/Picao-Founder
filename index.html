@@ -164,7 +164,7 @@
     <div class="orb orb-1"></div>
     <div class="orb orb-2"></div>
     <div class="logo-box">
-        <div style="font-family: var(--font-mono); color: var(--accent); margin-bottom: 15px; font-size: 0.75rem; letter-spacing: 2px;">SIMULATION v5.0 // ULTIMATE</div>
+        <div style="font-family: var(--font-mono); color: var(--accent); margin-bottom: 15px; font-size: 0.75rem; letter-spacing: 2px;">SIMULATION v5.1 // ULTIMATE</div>
         <h1>Picao<span>AI</span></h1>
         <p class="subtitle">
             <b>150+ Nodes. 50 Endings. No Dead Ends.</b><br>
@@ -268,7 +268,7 @@
             options: [
                 { text: "Drop Out of Stanford", meta: "High Hype • High Debt", next: "path_stanford", effect: { hype: 20, cash: -50000 }, trait: "Dropout" },
                 { text: "Quit Google PM Job", meta: "Safe • Boring", next: "path_corp", effect: { cash: 100000, sanity: -10, tech: 5 }, trait: "Ex-Googler" },
-                { text: "Mom's Basement", meta: "Indie • No Network", next: "path_indie", effect: { sanity: -5, cash: 5000 }, trait: "Indie" },
+                { text: "Use Picao Platform", meta: "Ideate & Launch", next: "path_indie", effect: { sanity: 5, tech: 10 }, trait: "Picao User" },
                 { text: "Steal Code from Employer", meta: "High Risk • Fast Start", next: "lawsuit_start", effect: { tech: 50, karma: -50 }, trait: "Thief" }
             ]
         },
@@ -340,8 +340,16 @@
             text: "You haven't seen the sun in 4 days. You live on Twitter.",
             options: [
                 { text: "#BuildInPublic", meta: "Influence", next: "twitter_fame", effect: { hype: 15 } },
-                { text: "Ship MVP on Reddit", meta: "Feedback", next: "reddit_launch", effect: { sanity: -10, tech: 10 } },
+                { text: "Launch via Picao", meta: "Product", next: "reddit_launch", effect: { sanity: -10, tech: 10 } },
                 { text: "Apply for Grants", meta: "Free Money", next: "grant_rejection", effect: { week: 2 } }
+            ]
+        },
+        twitter_fame: {
+            title: "VIRAL THREAD",
+            text: "Your thread 'How I built a SaaS in 4 days' has 1M views.",
+            options: [
+                { text: "Launch Course", meta: "Grifter", next: "saas_revenue", effect: { cash: 10000, karma: -10 } },
+                { text: "Convert to Users", meta: "Product", next: "server_crash", effect: { tech: 10 } }
             ]
         },
         reddit_launch: {
@@ -490,6 +498,7 @@
         end_jail: { title: "GAME OVER: PRISON", text: "You committed fraud. Enjoy 10 years in federal prison.", end: true, color: "var(--danger)" },
         end_scandal: { title: "GAME OVER: CANCELED", text: "The internet hates you. You live in a cabin now.", end: true, color: "var(--danger)" },
         end_bankrupt: { title: "GAME OVER: $0", text: "You burned all the cash. Game over.", end: true, color: "var(--danger)" },
+        end_burnout: { title: "GAME OVER: BURNOUT", text: "You collapsed at your desk. The doctor ordered 6 months of no screens.", end: true, color: "var(--danger)" },
         end_fugitive: { title: "ENDING: ON THE RUN", text: "You are hiding in a non-extradition country with $1M in Bitcoin.", end: true, color: "var(--warning)" },
         end_musk_pet: { title: "ENDING: X EMPLOYEE", text: "Elon bought your company. You sleep on the floor at HQ.", end: true, color: "#000000" },
         end_singularity: { title: "ENDING: POST-HUMAN", text: "The AI optimized humanity out of existence. You were first.", end: true, color: "#9333EA" },
@@ -578,6 +587,7 @@
                     </div>
                 </div>
                 <button class="choice-btn" onclick="location.reload()" style="margin-top: 20px; text-align: center; justify-content: center; font-weight: bold;">PLAY AGAIN</button>
+                <button class="choice-btn" onclick="navigator.clipboard.writeText('I reached a $${netWorth.toLocaleString()} valuation as a ${state.traits.join('/')} in the Picao Founder Simulator. Can you beat me? #PicaoAI'); alert('Copied to clipboard!')" style="margin-top: 10px; text-align: center; justify-content: center; font-weight: bold; color: var(--accent);">SHARE RESULT</button>
             `;
             playSound('cash');
         } else {
@@ -588,7 +598,6 @@
         }
         
         log.appendChild(el);
-        setTimeout(() => log.scrollTo({top:log.scrollHeight, behavior:'smooth'}), 100);
     }
 
     // --- RANDOM EVENTS (20+) ---
@@ -613,6 +622,11 @@
     }
 
     function resolveEvent(node, c, s, t, h, k) {
+        // Picao Advantage Mechanic
+        if (c < 0 && state.traits.includes('Picao User')) {
+            c = Math.floor(c / 2); // 50% cost reduction for Picao users
+        }
+
         state.cash += c; state.sanity += s; state.tech += t; state.hype += h; state.karma += k;
         updateUI();
         document.querySelectorAll('.choice-btn').forEach(b => b.disabled=true);
@@ -669,6 +683,7 @@
 
     function typeWriter(el, text) {
         let i=0; el.innerHTML = "";
+        const log = document.getElementById('story-log');
         function type() {
             if (i < text.length) {
                 if(text.charAt(i) === '<') { 
@@ -679,6 +694,7 @@
                     el.innerHTML += text.charAt(i); 
                     i++; 
                 }
+                log.scrollTo({top:log.scrollHeight, behavior:'smooth'});
                 setTimeout(type, 5); // Faster typing for better flow
             }
         }
@@ -690,9 +706,17 @@
         document.getElementById('ui-cash').className = state.cash < 0 ? 'stat-value danger' : 'stat-value';
         document.getElementById('ui-sanity').innerText = state.sanity + '%';
         document.getElementById('ui-equity').innerText = state.equity + '%';
-        document.getElementById('ui-status').innerText = state.status;
         document.getElementById('bar-sanity').style.width = Math.max(0, state.sanity) + '%';
         document.getElementById('bar-time').style.width = Math.min(100, (state.week / 52 * 100)) + '%';
+        
+        // Dynamic Status
+        let dynamicStatus = state.status;
+        if (state.status === "NOBODY") {
+            if (state.cash > 1000000) dynamicStatus = "UNICORN HUNTER";
+            else if (state.hype > 80) dynamicStatus = "LINKEDIN INFLUENCER";
+            else if (state.sanity < 20) dynamicStatus = "ZOMBIE FOUNDER";
+        }
+        document.getElementById('ui-status').innerText = dynamicStatus;
     }
 
     function renderTraits() {
