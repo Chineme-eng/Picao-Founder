@@ -164,7 +164,7 @@
     <div class="orb orb-1"></div>
     <div class="orb orb-2"></div>
     <div class="logo-box">
-        <div style="font-family: var(--font-mono); color: var(--accent); margin-bottom: 15px; font-size: 0.75rem; letter-spacing: 2px;">SIMULATION v5.1 // ULTIMATE</div>
+        <div style="font-family: var(--font-mono); color: var(--accent); margin-bottom: 15px; font-size: 0.75rem; letter-spacing: 2px;">SIMULATION v5.2 // ULTIMATE</div>
         <h1>Picao<span>AI</span></h1>
         <p class="subtitle">
             <b>150+ Nodes. 50 Endings. No Dead Ends.</b><br>
@@ -485,9 +485,9 @@
             title: "THE EXIT",
             text: "Microsoft ($500M) vs Google ($400M).",
             options: [
-                { text: "Sell to Satya", next: "end_rich" },
-                { text: "Sell to Google", next: "end_rich_graveyard" },
-                { text: "IPO", next: "end_ipo" }
+                { text: "Sell to Satya", next: "end_rich", effect: { valuation: 500000000 } },
+                { text: "Sell to Google", next: "end_rich_graveyard", effect: { valuation: 400000000 } },
+                { text: "IPO", next: "end_ipo", effect: { valuation: 20000000000 } }
             ]
         },
 
@@ -513,7 +513,7 @@
         twitter_viral: { title: "MAIN CHARACTER", text: "You are Twitter famous.", options: [{text:"Monetize", next:"saas_revenue"}, {text:"Say something offensive", next:"end_scandal"}] },
         b2b_sales: { title: "ENTERPRISE", text: "Selling to banks.", options: [{text:"Hire Sales", next:"acquisition_offer"}, {text:"Boring", next:"hardware_pivot"}] },
         series_a_term_sheet: { title: "TERM SHEET", text: "Sequoia: $10M @ $50M val.", options: [{text:"Sign", next:"hyper_growth"}, {text:"Pass", next:"bootstrap_hell"}] },
-        hyper_growth: { title: "UNICORN", text: "Valuation $1B.", options: [{text:"IPO", next:"end_ipo"}, {text:"Buy Ferrari", next:"end_bankrupt"}] },
+        hyper_growth: { title: "UNICORN", text: "Valuation $1B.", options: [{text:"IPO", next:"end_ipo", effect: { valuation: 20000000000 } }, {text:"Buy Ferrari", next:"end_bankrupt"}] },
         investor_anger: { title: "BOARD MEETING", text: "Investors are mad.", options: [{text:"Fire them", next:"end_scandal"}, {text:"Pivot", next:"hardware_pivot"}] },
         debt_spiral: { title: "DEBT", text: "You owe millions.", options: [{text:"Default", next:"end_bankrupt"}, {text:"Fraud", next:"sec_raid"}] },
         tech_breakthrough: { title: "EUREKA", text: "100x speed boost.", options: [{text:"Sell API", next:"acquisition_offer"}, {text:"Keep Secret", next:"end_luddite"}] },
